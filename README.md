@@ -7,7 +7,7 @@ This is my developer portfolio website built with HTML, CSS, and JavaScript. Fea
 - **Features**: Particle animations, project carousel, interactive timeline, and a floating mew!
 - **Audio**: Background music integration featuring my favourite Pokémon soundtracks
 
-## Repository Structure
+## File Structure
 
 
 ```
