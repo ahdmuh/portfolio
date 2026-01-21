@@ -73,18 +73,34 @@ export class VideoController extends ComponentBase {
             const video = card.querySelector('.project-video');
             const overlay = card.querySelector('.video-overlay');
             const controls = card.querySelector('.video-controls');
-            
+            const playIconCircle = card.querySelector('.play-icon-circle');
+
             if (!video) return;
             const state = {
                 isPlaying: false,
                 isPaused: true,
                 video: video,
                 overlay: overlay,
+                playIconCircle: playIconCircle,
                 wasPlayingBeforeLeave: false,
                 isTransitioning: false
             };
-            
+
             this.videoStates.set(card, state);
+
+            // Set up center play/pause button
+            if (playIconCircle) {
+                playIconCircle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.togglePlayPause(card);
+                });
+
+                playIconCircle.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.togglePlayPause(card);
+                });
+            }
             
             // Set up hover events for desktop - more robust detection
             card.addEventListener('mouseenter', () => this.handleMouseEnter(card));
@@ -215,16 +231,16 @@ export class VideoController extends ComponentBase {
         if (window.innerWidth <= 768) {
             const state = this.videoStates.get(card);
             if (!state) return;
-            
-            const { video, overlay } = state;
+
+            const { video, overlay, playIconCircle } = state;
             const controls = card.querySelector('.video-controls');
-            
+
             // Make sure controls are always visible on mobile
             if (controls) {
                 controls.style.opacity = '1';
                 controls.style.pointerEvents = 'auto';
             }
-            
+
             // Hide overlay on mobile focused cards to ensure controls are accessible
             if (card.classList.contains('mobile-project-card')) {
                 if (overlay) {
@@ -232,32 +248,55 @@ export class VideoController extends ComponentBase {
                     overlay.style.pointerEvents = 'none';
                 }
             }
-            
+
             // Enhanced touch event for video container (not on controls)
             const videoContainer = card.querySelector('.project-video-container');
             if (videoContainer) {
                 videoContainer.addEventListener('touchend', (e) => {
                     // Only handle if not touching controls or control buttons
-                    const isControlElement = e.target.closest('.video-controls') || 
+                    const isControlElement = e.target.closest('.video-controls') ||
                                            e.target.closest('.video-control-btn');
-                    
+
                     if (!isControlElement) {
                         e.preventDefault();
                         e.stopPropagation();
-                        
-                        if (state.isPaused && video.readyState >= 3) {
+
+                        if (state.isPaused) {
+                            // Lazy load video if not already loaded
+                            if (video.readyState === 0) {
+                                video.load();
+                            }
+
                             // Ensure video remains muted for mobile touch playback
                             video.muted = true;
-                            video.play()
-                                .then(() => {
-                                    state.isPlaying = true;
-                                    state.isPaused = false;
-                                })
-                                .catch(console.error);
+
+                            // Wait for video to be ready before playing
+                            const playWhenReady = () => {
+                                video.play()
+                                    .then(() => {
+                                        state.isPlaying = true;
+                                        state.isPaused = false;
+                                        // Update play icon
+                                        if (playIconCircle) {
+                                            playIconCircle.classList.add('playing');
+                                        }
+                                    })
+                                    .catch(console.error);
+                            };
+
+                            if (video.readyState >= 3) {
+                                playWhenReady();
+                            } else {
+                                video.addEventListener('canplay', playWhenReady, { once: true });
+                            }
                         } else if (state.isPlaying) {
                             video.pause();
                             state.isPlaying = false;
                             state.isPaused = true;
+                            // Update play icon
+                            if (playIconCircle) {
+                                playIconCircle.classList.remove('playing');
+                            }
                         }
                     }
                 }, { passive: false });
@@ -266,28 +305,87 @@ export class VideoController extends ComponentBase {
     }
 
     /**
-     * Handle mouse enter event - Start video playback
+     * Toggle play/pause for a project card video
+     */
+    togglePlayPause(card) {
+        const state = this.videoStates.get(card);
+        if (!state) return;
+
+        const { video, playIconCircle } = state;
+
+        // Ensure video is muted for card videos (not fullscreen)
+        video.muted = true;
+
+        if (state.isPaused || video.paused) {
+            // Lazy load video if not already loaded
+            if (video.readyState === 0) {
+                video.load();
+            }
+
+            // Play the video when ready
+            const playWhenReady = () => {
+                video.play()
+                    .then(() => {
+                        state.isPlaying = true;
+                        state.isPaused = false;
+                        if (playIconCircle) {
+                            playIconCircle.classList.add('playing');
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Failed to play video:', error);
+                    });
+            };
+
+            if (video.readyState >= 2) {
+                playWhenReady();
+            } else {
+                video.addEventListener('canplay', playWhenReady, { once: true });
+            }
+        } else {
+            // Pause the video
+            video.pause();
+            state.isPlaying = false;
+            state.isPaused = true;
+            if (playIconCircle) {
+                playIconCircle.classList.remove('playing');
+            }
+        }
+    }
+
+    /**
+     * Handle mouse enter event - Start video playback with lazy loading
      */
     handleMouseEnter(card) {
         const state = this.videoStates.get(card);
         if (!state) return;
-        
-        const { video } = state;
-        
+
+        const { video, playIconCircle } = state;
+
         // Prevent overlapping play/pause operations
         if (state.isTransitioning) return;
         state.isTransitioning = true;
-        
+
+        // Lazy load video if not already loaded (preload="none" means readyState is 0)
+        if (video.readyState === 0) {
+            // Load the video by setting the src (triggers network request)
+            video.load();
+        }
+
         // Try to start video playback - be more lenient with readyState
         const tryPlay = () => {
             // Ensure video is muted before playing (unless in fullscreen)
             video.muted = true;
-            
+
             video.play()
                 .then(() => {
                     state.isPlaying = true;
                     state.isPaused = false;
                     state.isTransitioning = false;
+                    // Update play icon to show pause
+                    if (playIconCircle) {
+                        playIconCircle.classList.add('playing');
+                    }
                 })
                 .catch((error) => {
                     // Silently handle AbortError which is normal during rapid interactions
@@ -319,12 +417,12 @@ export class VideoController extends ComponentBase {
     handleMouseLeave(card) {
         const state = this.videoStates.get(card);
         if (!state) return;
-        
-        const { video } = state;
-        
+
+        const { video, playIconCircle } = state;
+
         // IMMEDIATELY clear any ongoing intervals that might restart playback
         this.clearAllScrubIntervals();
-        
+
         // Stop all scrub button visual feedback for this card
         const controls = card.querySelector('.video-controls');
         if (controls) {
@@ -333,52 +431,75 @@ export class VideoController extends ComponentBase {
                 button.style.backgroundColor = '';
             });
         }
-        
+
         // Force pause video when not hovering (regardless of current state)
         video.pause();
         state.isPlaying = false;
         state.isPaused = true;
         state.wasPlayingBeforeLeave = true;
         state.isTransitioning = false;
-        
+
+        // Update play icon to show play
+        if (playIconCircle) {
+            playIconCircle.classList.remove('playing');
+        }
+
         // Double-check after a small delay to catch any async play attempts
         setTimeout(() => {
             if (!video.paused) {
                 video.pause();
                 state.isPlaying = false;
                 state.isPaused = true;
+                if (playIconCircle) {
+                    playIconCircle.classList.remove('playing');
+                }
             }
         }, 10);
-        
+
         // Triple-check after a slightly longer delay for stubborn intervals
         setTimeout(() => {
             if (!video.paused) {
                 video.pause();
                 this.clearAllScrubIntervals(); // Clear again just in case
+                if (playIconCircle) {
+                    playIconCircle.classList.remove('playing');
+                }
             }
         }, 50);
     }
 
     /**
-     * Restart video from beginning - 
+     * Restart video from beginning -
      */
     restartVideo(card) {
         const state = this.videoStates.get(card);
         if (!state) return;
-        
-        const { video } = state;
+
+        const { video, playIconCircle } = state;
         video.currentTime = 0;
-        
+
         // Ensure video remains muted when restarting (unless in fullscreen)
         if (!this.currentFullscreenData || this.currentFullscreenData.fullscreenVideo !== video) {
             video.muted = true;
         }
-        
+
         // Only play if it was already playing or if not paused
         if (state.isPlaying || !state.isPaused) {
-            video.play().catch(error => {
-                console.warn('Failed to restart video:', error);
-            });
+            video.play()
+                .then(() => {
+                    // Update play icon
+                    if (playIconCircle) {
+                        playIconCircle.classList.add('playing');
+                    }
+                })
+                .catch(error => {
+                    console.warn('Failed to restart video:', error);
+                });
+        } else {
+            // If paused, reset the icon to play
+            if (playIconCircle) {
+                playIconCircle.classList.remove('playing');
+            }
         }
     }
 

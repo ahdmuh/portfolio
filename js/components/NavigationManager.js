@@ -129,13 +129,7 @@ export class NavigationManager extends ComponentBase {
     handleScroll() {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const shouldShowBackground = scrollTop > this.options.scrollThreshold;
-        
-        // Dynamic opacity based on scroll - 
-        const opacity = Math.min(0.9, 0.8 + scrollTop / 500);
-        if (this.navbar) {
-            this.navbar.style.background = `rgba(255, 255, 255, ${opacity})`;
-        }
-        
+
         if (shouldShowBackground !== this.isScrolled) {
             this.isScrolled = shouldShowBackground;
             this.updateNavbarState();

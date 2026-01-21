@@ -23,6 +23,11 @@ export class MusicController extends ComponentBase {
         this.fadeAnimationId = null;
         this.bubbleShown = false;
         this.notificationTimeout = null;
+
+        // Notification queue system
+        this.notificationQueue = [];
+        this.isShowingNotification = false;
+        this.notificationTransitioning = false;
         
         // Audio analysis for reactive soundbars
         this.audioContext = null;
@@ -113,11 +118,8 @@ export class MusicController extends ComponentBase {
     async initEvents() {
         this.setupControlListener();
         this.setupBubbleAnimation();
-        
-        // Attach scroll listener after delay
-        setTimeout(() => {
-            this.attachScrollListener();
-        }, 800);
+
+        // Removed auto-start on scroll - music only starts when user clicks
     }
 
     /**
@@ -127,15 +129,16 @@ export class MusicController extends ComponentBase {
         this.audio = new Audio(this.options.musicPath);
         this.audio.loop = true;
         this.audio.volume = 0;
+        this.audio.preload = 'auto'; // Preload audio for instant playback
         this.isPlaying = false;
         this.soundControl.classList.remove("playing");
-        
+
         // Disable media session and background playback controls
         this.disableMediaSession();
-        
+
         // Setup audio analysis for reactive soundbars
         this.setupAudioAnalysis();
-        
+
     }
 
     /**
@@ -307,7 +310,11 @@ export class MusicController extends ComponentBase {
     setupControlListener() {
         this.soundControl.addEventListener("click", () => {
             this.userToggled = true; // Mark manual override
-            this.hideNotification(); // Hide notification when clicked
+
+            // Clear notification queue and hide current notification
+            this.notificationQueue = [];
+            this.hideNotification();
+
             this.toggleMusic(true);
         });
     }
@@ -332,26 +339,33 @@ export class MusicController extends ComponentBase {
     }
 
     /**
-     * Show notification
+     * Show notification - initial prompt
      */
     showNotification() {
         if (this.bubbleShown) return;
         this.bubbleShown = true;
-        
+
+        // Mark as showing
+        this.isShowingNotification = true;
+        this.notificationTransitioning = true;
+
         // Ensure clean state
         this.musicNotification.classList.remove("fade-out", "bounce");
-        
+
         // Use requestAnimationFrame for smooth animation
         requestAnimationFrame(() => {
             this.musicNotification.classList.add("show");
-            
-            // Add cute bounce after showing
+
+            // Transition complete after animation (wait for full 0.5s transition)
             setTimeout(() => {
+                this.notificationTransitioning = false;
+
+                // Add very subtle bounce AFTER scale transition completes
                 this.musicNotification.classList.add("bounce");
                 setTimeout(() => {
                     this.musicNotification.classList.remove("bounce");
                 }, 500);
-            }, 300);
+            }, 550); // Wait for scale transition to fully complete (0.5s + buffer)
         });
     }
 
@@ -360,53 +374,41 @@ export class MusicController extends ComponentBase {
      */
     hideNotification() {
         if (!this.musicNotification.classList.contains("show")) return;
-        
+
         // Clear any pending timeout to prevent premature hiding
         if (this.notificationTimeout) {
             clearTimeout(this.notificationTimeout);
             this.notificationTimeout = null;
         }
-        
+
+        // Mark as transitioning
+        this.notificationTransitioning = true;
+
         // Add fade-out animation
         this.musicNotification.classList.add("fade-out");
         this.musicNotification.classList.remove("show", "bounce");
-        
-        // Remove fade-out class after animation completes
+
+        // After fade-out completes, clean up and process next notification
         setTimeout(() => {
             this.musicNotification.classList.remove("fade-out");
-        }, 400);
+            this.isShowingNotification = false;
+            this.notificationTransitioning = false;
+
+            // Process next notification in queue if any
+            setTimeout(() => {
+                this.processNotificationQueue();
+            }, 400); // Gentle delay before showing next notification
+        }, 600); // Match CSS fade-out duration + buffer
     }
 
-    /**
-     * Attach scroll listener
-     */
-    attachScrollListener() {
-        const homeSection = document.getElementById("home");
-        if (!homeSection) return;
-        
-        const onScroll = () => {
-            if (this.hasStarted || this.userToggled) return; // don't auto play if already done or user toggled
-            const rect = homeSection.getBoundingClientRect();
-            // If home bottom is above top of viewport (scrolled past home)
-            if (rect.bottom <= 0) {
-                this.hasStarted = true;
-                this.fadeIn();
-                window.removeEventListener("scroll", onScroll);
-            }
-        };
-        
-        window.addEventListener("scroll", onScroll, {
-            passive: true,
-        });
-    }
 
     /**
      * Toggle music
      */
     toggleMusic(userTriggered = false) {
         if (this.isPlaying) {
-            // Use smooth fadeout even when user manually stops music
-            this.fadeOut(false);
+            // Instant stop when user manually stops music
+            this.fadeOut(true);
         } else {
             this.fadeIn();
         }
@@ -421,15 +423,23 @@ export class MusicController extends ComponentBase {
             clearInterval(this.fadeInterval);
             this.fadeInterval = null;
         }
-        
+
         // INSTANT visual feedback - no delays
         this.isPlaying = true;
         this.soundControl.classList.add("playing");
-        
-        // Generate random start time
-        this.randomStartTime = Math.random() * (this.songList[this.songList.length - 1].time - 30);
-        this.audio.currentTime = this.randomStartTime;
-        
+
+        // Only randomize on first play - always start at beginning of a song
+        if (!this.hasStarted) {
+            this.hasStarted = true;
+            // Pick a random song from the list
+            const randomSongIndex = Math.floor(Math.random() * this.songList.length);
+            const randomSong = this.songList[randomSongIndex];
+            // Start at the beginning of that song
+            this.audio.currentTime = randomSong.time;
+            this.randomStartTime = randomSong.time;
+        }
+        // On subsequent plays, resume from current position (no change to currentTime)
+
         // CRITICAL: Volume MUST be 0 and stay 0 until fade starts
         this.audio.volume = 0;
         
@@ -583,53 +593,74 @@ export class MusicController extends ComponentBase {
 
 
     /**
-     * Show now playing notification
+     * Show now playing notification - queued system
      */
     showNowPlaying(song) {
-        const notification = this.musicNotification;
-        const titleElement = notification.querySelector('.notification-title');
-        const textElement = notification.querySelector('.notification-text');
-        
-        // Update notification content
-        titleElement.textContent = 'Now Playing ♪';
-        textElement.textContent = `${song.title} (${song.game})`;
-        
-        // Smooth animation sequence with fade-out if already visible
-        if (notification.classList.contains('show')) {
-            // Already showing - fade out first, then fade in with new content
-            notification.classList.add('fade-out');
-            notification.classList.remove('show', 'bounce');
-            
-            setTimeout(() => {
-                notification.classList.remove('fade-out');
-                this.animateNotificationIn(notification);
-            }, 400);
-        } else {
-            // Not showing - animate in directly
-            this.animateNotificationIn(notification);
+        // Add to queue
+        this.notificationQueue.push({
+            title: 'Now Playing ♪',
+            text: `${song.title} (${song.game})`,
+            duration: 6000
+        });
+
+        // Process queue if not already showing a notification
+        this.processNotificationQueue();
+    }
+
+    /**
+     * Process notification queue - shows notifications one at a time
+     */
+    processNotificationQueue() {
+        // Don't start a new notification if one is showing or transitioning
+        if (this.isShowingNotification || this.notificationTransitioning) {
+            return;
         }
-        
+
+        // Check if there's anything in the queue
+        if (this.notificationQueue.length === 0) {
+            return;
+        }
+
+        // Get next notification from queue
+        const notification = this.notificationQueue.shift();
+        const element = this.musicNotification;
+        const titleElement = element.querySelector('.notification-title');
+        const textElement = element.querySelector('.notification-text');
+
+        // Update content
+        titleElement.textContent = notification.title;
+        textElement.textContent = notification.text;
+
+        // Mark as showing and transitioning
+        this.isShowingNotification = true;
+        this.notificationTransitioning = true;
+
+        // Animate in
+        this.animateNotificationIn(element, notification.duration);
     }
     
     /**
      * Helper method to animate notification in
      */
-    animateNotificationIn(notification) {
+    animateNotificationIn(notification, duration = 6000) {
         requestAnimationFrame(() => {
             notification.classList.add('show');
-            
-            // Add bounce after the initial scale animation completes
+
+            // Transition complete after animation (wait for full 0.5s transition)
             setTimeout(() => {
+                this.notificationTransitioning = false;
+
+                // Add very subtle bounce AFTER scale transition completes
                 notification.classList.add('bounce');
                 setTimeout(() => {
                     notification.classList.remove('bounce');
-                }, 400);
-            }, 300); // Wait for scale animation to finish
-            
-            // Auto-hide after 6 seconds with smooth fade-out
+                }, 500);
+            }, 550); // Wait for scale transition to fully complete (0.5s + buffer)
+
+            // Auto-hide after specified duration with smooth fade-out
             this.notificationTimeout = setTimeout(() => {
                 this.hideNotification();
-            }, 6000);
+            }, duration);
         });
     }
 
@@ -681,7 +712,12 @@ export class MusicController extends ComponentBase {
             clearTimeout(this.notificationTimeout);
             this.notificationTimeout = null;
         }
-        
+
+        // Clear notification queue and reset flags
+        this.notificationQueue = [];
+        this.isShowingNotification = false;
+        this.notificationTransitioning = false;
+
         // Stop reactive soundbars
         this.stopReactiveSoundbars();
         

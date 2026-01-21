@@ -3,21 +3,21 @@
  */
 
 :root {
-	--primary: #ff3b3b;
-	--primary-dark: #cc0000;
-	--secondary: #ff6b6b;
-	--accent-pink: #ff69b4;
+	--primary: #f04b3c;
+	--primary-dark: #c22121;
+	--secondary: #f1e8e1;
+	--accent-pink: #d43d2b;
 	--bg-white: #ffffff;
 	--bg-light: #f8f9fa;
 	--bg-gradient: linear-gradient(
 		135deg,
-		#ff3b3b 0%,
-		#ff69b4 50%,
-		#ff6b6b 100%
+		#c22121 0%,
+		#f04b3c 50%,
+		#ffb27e 100%
 	);
 	--text-dark: #1a1a1a;
 	--text-light: #666666;
-	--shadow: rgba(255, 59, 59, 0.1);
+	--shadow: rgba(240, 75, 60, 0.1);
 
 	/* Typography variables */
 	--font-weight-normal: 400;

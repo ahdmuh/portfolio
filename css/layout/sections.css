@@ -9,6 +9,29 @@
 section {
     padding: 5rem 0;
     position: relative;
+    transition: background-color 0.3s ease;
+    margin: 0;
+    width: 100%;
+}
+
+/* Dark mode section - About */
+.about {
+    background: #262526;
+}
+
+/* Light mode section - Experience */
+.experience {
+    background: #f2f0f1;
+}
+
+/* Dark mode section - Projects */
+.projects {
+    background: #262526;
+}
+
+/* Light mode section - Contact */
+.contact {
+    background: #f2f0f1;
 }
 
 section:not(:first-child) {
@@ -27,9 +50,9 @@ section:not(:first-child):not(.about)::before {
     background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(255, 59, 59, 0.3) 25%,
-        rgba(255, 105, 180, 0.4) 50%,
-        rgba(255, 59, 59, 0.3) 75%,
+        rgba(240, 75, 60, 0.3) 25%,
+        rgba(212, 61, 43, 0.4) 50%,
+        rgba(240, 75, 60, 0.3) 75%,
         transparent 100%
     );
     animation: separator-pulse 3s ease-in-out infinite;
@@ -46,9 +69,9 @@ section:not(:first-child):not(.about)::after {
     height: 12px;
     background: var(--bg-gradient);
     border-radius: 2px;
-    box-shadow: 
-        0 0 20px rgba(255, 59, 59, 0.3),
-        0 0 40px rgba(255, 105, 180, 0.2);
+    box-shadow:
+        0 0 20px rgba(240, 75, 60, 0.3),
+        0 0 40px rgba(212, 61, 43, 0.2);
     animation: diamond-glow 4s ease-in-out infinite;
 }
 
@@ -65,15 +88,15 @@ section:not(:first-child):not(.about)::after {
 
 @keyframes diamond-glow {
     0%, 100% {
-        box-shadow: 
-            0 0 15px rgba(255, 59, 59, 0.2),
-            0 0 30px rgba(255, 105, 180, 0.1);
+        box-shadow:
+            0 0 15px rgba(240, 75, 60, 0.2),
+            0 0 30px rgba(212, 61, 43, 0.1);
         transform: translateX(-50%) rotate(45deg) scale(1);
     }
     50% {
-        box-shadow: 
-            0 0 25px rgba(255, 59, 59, 0.4),
-            0 0 50px rgba(255, 105, 180, 0.3);
+        box-shadow:
+            0 0 25px rgba(240, 75, 60, 0.4),
+            0 0 50px rgba(212, 61, 43, 0.3);
         transform: translateX(-50%) rotate(45deg) scale(1.1);
     }
 }
@@ -297,9 +320,9 @@ section:not(:first-child):not(.about)::after {
     
     section:not(:first-child):not(.about)::after {
         transform: translateX(-50%) rotate(45deg) scale(1);
-        box-shadow: 
-            0 0 20px rgba(255, 59, 59, 0.3),
-            0 0 40px rgba(255, 105, 180, 0.2);
+        box-shadow:
+            0 0 20px rgba(240, 75, 60, 0.3),
+            0 0 40px rgba(212, 61, 43, 0.2);
     }
 }
 
@@ -310,13 +333,6 @@ section:not(:first-child):not(.about)::after {
     padding: 0 2rem;
 }
 
-/* Only apply right shift on larger screens where it makes sense */
-@media (min-width: 1300px) {
-    .container {
-        margin: 0 auto 0 calc(50% - 600px + 20px);
-    }
-}
-
 .section-title {
     font-size: 3rem;
     font-weight: 700;
@@ -324,6 +340,19 @@ section:not(:first-child):not(.about)::after {
     margin-bottom: 2rem;
     position: relative;
     letter-spacing: -0.02em;
+    color: var(--text-dark);
+}
+
+/* Dark mode sections - white text */
+.about .section-title,
+.projects .section-title {
+    color: #ffffff;
+}
+
+/* Light grey sections - dark text */
+.experience .section-title,
+.contact .section-title {
+    color: var(--text-dark);
 }
 
 .section-title span {
@@ -341,10 +370,6 @@ section:not(:first-child):not(.about)::after {
 /* ============================================================================
    About Section -  portfolio.html
    ============================================================================ */
-
-.about {
-    background: var(--bg-light);
-}
 
 .about-content {
     display: grid;
@@ -419,16 +444,16 @@ section:not(:first-child):not(.about)::after {
 
 @keyframes radiating-glow {
     0%, 100% {
-        box-shadow: 
+        box-shadow:
             0 15px 30px var(--shadow),
-            0 0 0 0 rgba(255, 59, 59, 0.4),
-            0 0 0 0 rgba(255, 105, 180, 0.3);
+            0 0 0 0 rgba(240, 75, 60, 0.4),
+            0 0 0 0 rgba(212, 61, 43, 0.3);
     }
     50% {
-        box-shadow: 
+        box-shadow:
             0 15px 30px var(--shadow),
-            0 0 0 10px rgba(255, 59, 59, 0.1),
-            0 0 0 20px rgba(255, 105, 180, 0.05);
+            0 0 0 10px rgba(240, 75, 60, 0.1),
+            0 0 0 20px rgba(212, 61, 43, 0.05);
     }
 }
 
@@ -438,6 +463,10 @@ section:not(:first-child):not(.about)::after {
 
 .about-text {
     position: relative;
+}
+
+.about .about-text p {
+    color: rgba(255, 255, 255, 0.75);
 }
 
 .about-text p {
@@ -467,6 +496,30 @@ section:not(:first-child):not(.about)::after {
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
     overflow: hidden;
+}
+
+/* Dark mode skill cards */
+.about .skill-category {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+}
+
+.about .skill-category h3 {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.about .skill-tag {
+    background: rgba(194, 33, 33, 0.2);
+    color: #ff6b6b;
+    border: 1px solid rgba(194, 33, 33, 0.3);
+}
+
+.about .skill-tag:hover {
+    background: var(--primary-dark);
+    color: #ffffff;
+    border-color: var(--primary);
 }
 
 .skill-category::before {
@@ -504,7 +557,7 @@ section:not(:first-child):not(.about)::after {
 }
 
 .skill-tag {
-    background: rgba(255, 59, 59, 0.1);
+    background: rgba(240, 75, 60, 0.1);
     color: var(--primary);
     padding: 0.2rem 0.4rem;
     border-radius: 8px;
@@ -524,8 +577,12 @@ section:not(:first-child):not(.about)::after {
    ============================================================================ */
 
 .contact {
-    background: white;
     text-align: center;
+    padding-bottom: 3rem;
+}
+
+.contact .contact-message {
+    color: var(--text-dark);
 }
 
 .contact-content {
@@ -553,7 +610,9 @@ section:not(:first-child):not(.about)::after {
     align-items: center;
     gap: 0.75rem;
     padding: 1rem 1.5rem;
-    background: var(--bg-light);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(240, 75, 60, 0.1);
     border-radius: 30px;
     color: var(--text-dark);
     text-decoration: none;
@@ -594,6 +653,20 @@ section:not(:first-child):not(.about)::after {
     height: 20px;
 }
 
+.mini-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    text-align: center;
+    color: var(--text-dark);
+    font-size: 0.875rem;
+    opacity: 0.6;
+}
+
+.mini-footer p {
+    margin: 0;
+}
+
 /* ============================================================================
    Unique Footer
    ============================================================================ */
@@ -603,17 +676,17 @@ section:not(:first-child):not(.about)::after {
     padding: 2rem 0 1.5rem;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, 
+    background: linear-gradient(135deg,
         rgba(248, 249, 250, 0.95) 0%,
-        rgba(255, 59, 59, 0.08) 20%,
-        rgba(255, 105, 180, 0.12) 40%,
-        rgba(255, 107, 107, 0.1) 60%,
-        rgba(255, 59, 59, 0.08) 80%,
+        rgba(240, 75, 60, 0.08) 20%,
+        rgba(212, 61, 43, 0.12) 40%,
+        rgba(255, 178, 126, 0.1) 60%,
+        rgba(240, 75, 60, 0.08) 80%,
         rgba(248, 249, 250, 0.95) 100%);
-    border-top: 1px solid rgba(255, 59, 59, 0.15);
-    box-shadow: 
+    border-top: 1px solid rgba(240, 75, 60, 0.15);
+    box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.8),
-        0 -8px 25px rgba(255, 59, 59, 0.12);
+        0 -8px 25px rgba(240, 75, 60, 0.12);
 }
 
 .footer-content {
@@ -623,6 +696,8 @@ section:not(:first-child):not(.about)::after {
     gap: 1rem;
     position: relative;
     z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .footer-separator {
@@ -734,7 +809,7 @@ section:not(:first-child):not(.about)::after {
     position: absolute;
     width: 120px;
     height: 120px;
-    background: radial-gradient(circle, rgba(255, 59, 59, 0.06) 0%, rgba(255, 105, 180, 0.04) 40%, transparent 70%);
+    background: radial-gradient(circle, rgba(240, 75, 60, 0.06) 0%, rgba(212, 61, 43, 0.04) 40%, transparent 70%);
     border-radius: 50%;
     animation: float-around 8s ease-in-out infinite;
     filter: blur(3px);

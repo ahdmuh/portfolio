@@ -11,18 +11,17 @@ nav {
     position: fixed;
     top: 0;
     width: 100%;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: var(--bg-white);
     z-index: 1000;
     padding: 1rem 0;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    box-shadow: 0 1px 10px rgba(255, 59, 59, 0.08);
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
 }
 
 nav.scrolled {
     padding: 0.1rem 0;
-    box-shadow: 0 2px 20px var(--shadow);
+    background: var(--bg-white);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
 }
 
 .nav-container {

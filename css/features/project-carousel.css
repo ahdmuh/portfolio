@@ -6,13 +6,15 @@
    ============================================================================ */
 
 .projects {
-    background: var(--bg-light);
-    padding: 4rem 0 2rem 0;
+    padding: 4rem 0 10rem 0;
 }
 
 .projects-container {
     position: relative;
-    min-height: 600px; /* Ensure enough space for button */
+    min-height: 800px; /* Ensure enough space for button */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .projects-grid {
@@ -20,10 +22,13 @@
     flex-wrap: wrap;
     gap: 1.5rem;
     transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    transform: scale(0.8);
     transform-origin: center top;
-    margin-bottom: 0;
+    margin-bottom: 5rem;
     justify-content: center;
+    width: 100%;
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Keep all cards normal size and fixed width */
@@ -39,18 +44,11 @@
         /* Inherit flex layout from desktop - no changes needed */
         gap: 2rem;
     }
-    
+
     .project-card {
         flex: 0 0 300px; /* Slightly smaller cards for tablet */
         max-width: 300px;
         width: 300px;
-    }
-    
-    /* Keep view more button positioned like desktop */
-    .view-more-btn {
-        position: absolute;
-        bottom: 80px;
-        right: 120px;
     }
 }
 
@@ -60,8 +58,8 @@
 
 .view-more-btn {
     position: absolute;
-    bottom: 80px;
-    right: 120px;
+    bottom: -40px;
+    right: 40px;
     background: none;
     border: none;
     color: var(--primary);
@@ -74,6 +72,15 @@
     font-size: 16px;
     padding: 8px 0;
     z-index: 10;
+}
+
+/* Dark mode view more button */
+.projects .view-more-btn {
+    color: #ff6b6b;
+}
+
+.projects .view-more-btn:hover {
+    color: var(--primary);
 }
 
 .view-more-btn:hover {
@@ -126,58 +133,82 @@
     flex-direction: column;
 }
 
+.projects .project-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.projects .project-title {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.projects .project-description {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.projects .project-link {
+    color: #ff6b6b;
+}
+
+.projects .project-link:hover {
+    color: var(--primary);
+}
+
 .project-card.visible {
     opacity: 1;
     transform: translateY(0);
 }
 
-/* Hover effects only on non-touch devices - ENHANCED with popup and radial glow */
 @media (hover: hover) and (pointer: fine) {
     .project-card {
         position: relative;
-        overflow: visible; /* Allow glow to show outside card */
+        overflow: visible;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
-    
+
     .project-card::before {
         content: '';
         position: absolute;
         inset: -10px;
         border-radius: 30px;
-        background: radial-gradient(circle at 50% 50%, 
-            rgba(255, 105, 180, 0.15) 0%,
-            rgba(255, 59, 59, 0.08) 40%, 
+        background: radial-gradient(circle at 50% 50%,
+            rgba(212, 61, 43, 0.15) 0%,
+            rgba(240, 75, 60, 0.08) 40%,
             transparent 70%);
         opacity: 0;
         transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         pointer-events: none;
         z-index: -1;
     }
-    
+
     .project-card:hover {
         transform: translateY(-8px) scale(1.02);
-        box-shadow: 
+        box-shadow:
             0 15px 35px var(--shadow),
-            0 0 30px rgba(255, 105, 180, 0.1),
-            0 0 60px rgba(255, 59, 59, 0.05);
+            0 0 30px rgba(212, 61, 43, 0.1),
+            0 0 60px rgba(240, 75, 60, 0.05);
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                    box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
-    
+
     .project-card:hover::before {
         opacity: 1;
         animation: glowPulse 2s ease-in-out infinite;
     }
-    
+
     .project-card:hover .play-icon-circle {
         transform: scale(1.08);
-        background: rgba(255, 255, 255, 1);
-        box-shadow: 
-            0 10px 30px rgba(0, 0, 0, 0.3),
-            0 0 20px rgba(255, 105, 180, 0.2);
+        background: rgba(0, 0, 0, 0.85);
+        border-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     }
-    
+
     .project-card:hover .video-overlay {
         opacity: 0;
     }
-    
+
     .project-card:hover .video-controls {
         opacity: 1;
         pointer-events: auto;
@@ -210,16 +241,13 @@
 
 @keyframes glowPulse {
     0%, 100% {
-        opacity: 1;
         transform: scale(1);
     }
     50% {
-        opacity: 0.7;
         transform: scale(1.02);
     }
 }
 
-/* Focused card effects for mobile - ENHANCED with video undimming */
 .mobile-project-card.focused {
     transform: translateY(-4px) scale(1.02) !important;
     box-shadow: 0 15px 35px var(--shadow) !important;
@@ -227,7 +255,7 @@
 }
 
 .mobile-project-card.focused .project-video {
-    opacity: 1 !important; /* Focused videos are fully visible */
+    opacity: 1 !important;
     filter: brightness(1) !important;
 }
 
@@ -240,7 +268,6 @@
     pointer-events: auto;
 }
 
-/* Enhanced mobile video controls */
 @media (max-width: 768px) {
     .mobile-project-card .video-controls {
         opacity: 1;
@@ -266,7 +293,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 20px 20px 0 0; /* Match card's top border radius */
+    border-radius: 20px 20px 0 0;
 }
 
 .project-video {
@@ -276,7 +303,7 @@
     transform: translateZ(0);
     will-change: auto;
     backface-visibility: hidden;
-    border-radius: 20px 20px 0 0; /* Match container's border radius */
+    border-radius: 20px 20px 0 0;
 }
 
 .video-overlay {
@@ -299,29 +326,46 @@
 .play-icon-circle {
     width: 80px;
     height: 80px;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.play-icon-circle:hover {
+    background: rgba(0, 0, 0, 0.85);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
 }
 
 .play-icon-circle i {
     font-size: 28px;
-    color: var(--primary);
-    margin-left: 4px; /* Slight offset to visually center the play icon */
+    color: white;
+    margin-left: 4px;
 }
 
-/* Video hover effects only on non-touch devices */
+.play-icon-circle.playing i {
+    margin-left: 0;
+}
+
+.play-icon-circle.playing i::before {
+    content: "\f04c";
+}
+
 @media (hover: hover) and (pointer: fine) {
     .project-card:hover .play-icon-circle {
         transform: scale(1.1);
-        background: rgba(255, 255, 255, 1);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, 0.85);
+        border-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
     }
 
     .project-card:hover .video-overlay {
@@ -334,7 +378,6 @@
     }
 }
 
-/* Focused video effects for mobile */
 .mobile-project-card.focused .video-overlay {
     opacity: 0;
 }
@@ -344,7 +387,6 @@
     pointer-events: auto;
 }
 
-/* Enhanced mobile video controls */
 @media (max-width: 768px) {
     .mobile-project-card .video-controls {
         opacity: 1;
@@ -380,25 +422,27 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    color: var(--primary);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .video-control-btn:hover {
-    background: white;
+    background: rgba(0, 0, 0, 0.85);
+    border-color: rgba(255, 255, 255, 0.5);
     transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .video-control-btn.scrubbing {
     background: var(--primary);
+    border-color: var(--primary-dark);
     color: white;
     transform: scale(1.15);
     box-shadow: 0 0 15px var(--primary);
@@ -458,12 +502,26 @@
 }
 
 .tech-tag {
-    background: rgba(255, 105, 180, 0.1);
+    background: rgba(212, 61, 43, 0.1);
     color: var(--accent-pink);
     padding: 0.25rem 0.75rem;
     border-radius: 15px;
     font-size: 0.75rem;
     font-weight: 500;
+}
+
+.projects .tech-tag {
+    background: rgba(194, 33, 33, 0.2);
+    color: #ff6b6b;
+    border: 1px solid rgba(194, 33, 33, 0.3);
+    transition: all 0.2s ease;
+}
+
+.projects .tech-tag:hover {
+    background: var(--primary-dark);
+    color: #ffffff;
+    border-color: var(--primary);
+    transform: scale(1.05);
 }
 
 .project-links {
@@ -493,7 +551,7 @@
 .mobile-projects {
     display: none;
     padding: 0.5rem 0;
-    margin: 0 -1rem;
+    margin: 0;
 }
 
 .mobile-project-viewport {
@@ -504,10 +562,13 @@
     min-height: 580px;
     user-select: none;
     -webkit-user-select: none;
+    padding: 1.5rem 2.5rem 0 2.5rem;
+    max-width: 100vw;
 }
 
 .mobile-projects-track {
     display: flex;
+    gap: 5rem;
     transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
     height: auto;
     will-change: transform;
@@ -515,13 +576,41 @@
 
 .mobile-project-card {
     flex-shrink: 0;
-    width: calc(100% - 2rem);
+    width: calc(100vw - 5rem);
     height: auto;
-    margin: 1rem;
-    background: white;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 10px 30px var(--shadow);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.mobile-project-card .project-title {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.mobile-project-card .project-description {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.mobile-project-card .project-link {
+    color: #ff6b6b;
+}
+
+.mobile-project-card .tech-tag {
+    background: rgba(194, 33, 33, 0.2);
+    color: #ff6b6b;
+    border: 1px solid rgba(194, 33, 33, 0.3);
+    transition: all 0.2s ease;
+}
+
+.mobile-project-card .tech-tag:hover {
+    background: var(--primary-dark);
+    color: #ffffff;
+    border-color: var(--primary);
+    transform: scale(1.05);
 }
 
 .mobile-project-card .project-video-container {
@@ -538,7 +627,7 @@
     object-fit: cover;
     border-radius: 0;
     transition: opacity 0.3s ease, filter 0.3s ease;
-    opacity: 0.4; /* Unfocused videos are dimmed by default */
+    opacity: 0.4;
     filter: brightness(0.7);
 }
 
@@ -547,7 +636,6 @@
     min-height: 220px;
 }
 
-/* Re-enable text selection for links */
 .mobile-project-card .project-link {
     user-select: auto;
     -webkit-user-select: auto;
@@ -563,14 +651,13 @@
     gap: 8px;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    /* Will be positioned dynamically by JavaScript */
 }
 
 .indicator-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: rgba(255, 59, 59, 0.3);
+    background: rgba(240, 75, 60, 0.3);
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -597,13 +684,13 @@
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    box-shadow: 
-        0 8px 32px rgba(255, 105, 180, 0.2),
-        0 4px 16px rgba(255, 105, 180, 0.15),
-        0 2px 8px rgba(255, 105, 180, 0.2),
+    box-shadow:
+        0 8px 32px rgba(212, 61, 43, 0.2),
+        0 4px 16px rgba(212, 61, 43, 0.15),
+        0 2px 8px rgba(212, 61, 43, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 105, 180, 0.3);
+    border: 2px solid rgba(212, 61, 43, 0.3);
     z-index: 10;
     animation: swipeHint 3s ease-in-out infinite;
     transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -632,20 +719,20 @@
 }
 
 @keyframes swipeHint {
-    0%, 100% { 
-        transform: translateY(-50%) translateX(0) scale(1); 
-        box-shadow: 
-            0 8px 32px rgba(255, 105, 180, 0.2),
-            0 4px 16px rgba(255, 105, 180, 0.15),
-            0 2px 8px rgba(255, 105, 180, 0.2),
+    0%, 100% {
+        transform: translateY(-50%) translateX(0) scale(1);
+        box-shadow:
+            0 8px 32px rgba(212, 61, 43, 0.2),
+            0 4px 16px rgba(212, 61, 43, 0.15),
+            0 2px 8px rgba(212, 61, 43, 0.2),
             inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
-    50% { 
-        transform: translateY(-50%) translateX(6px) scale(1.02); 
-        box-shadow: 
-            0 12px 40px rgba(255, 105, 180, 0.3),
-            0 8px 24px rgba(255, 105, 180, 0.2),
-            0 4px 12px rgba(255, 105, 180, 0.25),
+    50% {
+        transform: translateY(-50%) translateX(6px) scale(1.02);
+        box-shadow:
+            0 12px 40px rgba(212, 61, 43, 0.3),
+            0 8px 24px rgba(212, 61, 43, 0.2),
+            0 4px 12px rgba(212, 61, 43, 0.25),
             inset 0 1px 0 rgba(255, 255, 255, 0.4);
     }
 }
@@ -682,9 +769,15 @@
     }
 }
 
-/* This media query removed - tablet view now uses flex layout like desktop */
-
 @media (max-width: 768px) {
+    .projects {
+        padding: 3rem 0 5rem 0;
+    }
+
+    .projects-container {
+        min-height: auto;
+    }
+
     .projects-grid {
         display: none;
     }

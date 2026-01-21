@@ -56,6 +56,15 @@ export const FEATURED_PROJECTS = [
                 </svg>`,
                 text: 'View Code'
             },
+            {
+                type: 'website',
+                url: 'https://www.pokesight.cc',
+                icon: `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>`,
+                text: 'View Site'
+            }
         ]
     },
 	{

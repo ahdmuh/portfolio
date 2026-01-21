@@ -139,8 +139,8 @@
 }
 
 .center-play-btn {
-    background: rgba(255, 255, 255, 0.9);
-    border: 2px solid rgba(255, 69, 137, 0.3);
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     width: 80px;
     height: 80px;
     border-radius: 50%;
@@ -149,19 +149,20 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
     z-index: 9999; /* Ensure it's always on top */
     pointer-events: auto; /* Re-enable clicks on the button itself */
 }
 
 .center-play-btn:hover {
-    background: white;
+    background: rgba(0, 0, 0, 0.85);
+    border-color: rgba(255, 255, 255, 0.5);
     transform: scale(1.1);
 }
 
 .center-play-btn i {
     font-size: 28px;
-    color: #333;
+    color: white;
     margin-left: 4px; /* Adjust play icon centering */
 }
 
@@ -217,7 +218,7 @@
     top: 0;
     left: 0;
     height: 100%;
-    background: linear-gradient(90deg, #ff4589, #ff69b4);
+    background: var(--bg-gradient);
     border-radius: 3px;
     width: 0%;
 }
@@ -280,11 +281,11 @@
 }
 
 .fullscreen-exit-btn {
-    background: rgba(255, 69, 137, 0.2) !important;
+    background: rgba(240, 75, 60, 0.2) !important;
 }
 
 .fullscreen-exit-btn:hover {
-    background: rgba(255, 69, 137, 0.4) !important;
+    background: rgba(240, 75, 60, 0.4) !important;
 }
 
 /* ============================================================================

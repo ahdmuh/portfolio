@@ -67,6 +67,8 @@
 
 .btn-secondary:hover {
 	color: white;
+	background: var(--primary);
+	border-color: var(--primary);
 	transform: translateY(-3px);
 	box-shadow: 0 8px 25px var(--shadow);
 }
@@ -84,7 +86,7 @@
 	height: 32px;
 	border-radius: 50%;
 	background: rgba(255, 255, 255, 0.9);
-	border: none;
+	border: 1.5px solid rgba(194, 33, 33, 0.4);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -96,12 +98,14 @@
 
 .video-control-btn:hover {
 	background: white;
+	border-color: rgba(194, 33, 33, 0.7);
 	transform: scale(1.1);
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 0 10px rgba(194, 33, 33, 0.2);
 }
 
 .video-control-btn.scrubbing {
 	background: var(--primary);
+	border-color: var(--primary-dark);
 	color: white;
 	transform: scale(1.15);
 	box-shadow: 0 0 15px var(--primary);
@@ -213,7 +217,7 @@
 
 .center-play-btn {
 	background: rgba(255, 255, 255, 0.9);
-	border: 2px solid rgba(255, 69, 137, 0.3);
+	border: 2px solid rgba(194, 33, 33, 0.6);
 	width: 80px;
 	height: 80px;
 	border-radius: 50%;
@@ -264,11 +268,11 @@
 }
 
 .fullscreen-exit-btn {
-	background: rgba(255, 69, 137, 0.2) !important;
+	background: rgba(240, 75, 60, 0.2) !important;
 }
 
 .fullscreen-exit-btn:hover {
-	background: rgba(255, 69, 137, 0.4) !important;
+	background: rgba(240, 75, 60, 0.4) !important;
 }
 
 /* ============================================================================

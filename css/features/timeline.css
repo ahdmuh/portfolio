@@ -4,16 +4,11 @@
 
 /* Experience Timeline */
 
-.experience {
-    background: white;
-}
-
 .timeline {
     position: relative;
-    padding: 1rem 0;
-    max-width: 900px;
+    padding: 3rem 0 1rem 0;
+    max-width: 1200px;
     margin: 0 auto;
-    transform: scale(0.9);
 }
 
 .timeline::before {
@@ -48,6 +43,14 @@
     width: calc(50% - 3rem);
     position: relative;
     transition: all 0.3s ease;
+}
+
+/* Light cards on light background */
+.experience .timeline-content {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(240, 75, 60, 0.1);
+    box-shadow: 0 5px 20px rgba(240, 75, 60, 0.08);
 }
 
 .timeline-item:nth-child(odd) .timeline-content {
@@ -103,11 +106,11 @@
 .graduation-dot {
     background: var(--accent-pink) !important;
     border: 4px solid white !important;
-    box-shadow: 
-        0 0 0 3px var(--accent-pink), 
-        0 0 20px rgba(255, 105, 180, 0.6),
-        0 0 40px rgba(255, 105, 180, 0.3),
-        0 4px 15px rgba(255, 59, 59, 0.4);
+    box-shadow:
+        0 0 0 3px var(--accent-pink),
+        0 0 20px rgba(212, 61, 43, 0.6),
+        0 0 40px rgba(212, 61, 43, 0.3),
+        0 4px 15px rgba(240, 75, 60, 0.4);
     width: 24px !important;
     height: 24px !important;
     left: 50% !important;
@@ -124,7 +127,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(255, 105, 180, 0.6) 0%, rgba(255, 105, 180, 0.6) 50%, rgba(255, 105, 180, 0.3) 70%, transparent 100%);
+    background: radial-gradient(circle, rgba(212, 61, 43, 0.6) 0%, rgba(212, 61, 43, 0.6) 50%, rgba(212, 61, 43, 0.3) 70%, transparent 100%);
     border-radius: 50%;
     animation: ripple-pink 3.5s linear infinite;
     pointer-events: none;
@@ -163,13 +166,13 @@
 }
 
 .current-dot {
-    background: #ff3b3b !important;
+    background: var(--primary) !important;
     border: 4px solid white !important;
-    box-shadow: 
-        0 0 0 3px #ff3b3b,
-        0 0 25px rgba(255, 59, 59, 0.8),
-        0 0 50px rgba(255, 59, 59, 0.4),
-        0 4px 15px rgba(255, 59, 59, 0.4);
+    box-shadow:
+        0 0 0 3px var(--primary),
+        0 0 25px rgba(240, 75, 60, 0.8),
+        0 0 50px rgba(240, 75, 60, 0.4),
+        0 4px 15px rgba(240, 75, 60, 0.4);
     width: 24px !important;
     height: 24px !important;
     left: 50% !important;
@@ -187,7 +190,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(255, 59, 59, 0.6) 0%, rgba(255, 59, 59, 0.6) 50%, rgba(255, 59, 59, 0.3) 70%, transparent 100%);
+    background: radial-gradient(circle, rgba(240, 75, 60, 0.6) 0%, rgba(240, 75, 60, 0.6) 50%, rgba(240, 75, 60, 0.3) 70%, transparent 100%);
     border-radius: 50%;
     animation: ripple 3s linear infinite;
     pointer-events: none;
@@ -226,21 +229,21 @@
 }
 
 @keyframes pulse-desktop {
-    0%, 100% { 
+    0%, 100% {
         transform: translateX(-50%) scale(1);
-        box-shadow: 
-            0 0 0 3px #ff3b3b,
-            0 0 25px rgba(255, 59, 59, 0.8),
-            0 0 50px rgba(255, 59, 59, 0.4),
-            0 4px 15px rgba(255, 59, 59, 0.4);
+        box-shadow:
+            0 0 0 3px var(--primary),
+            0 0 25px rgba(240, 75, 60, 0.8),
+            0 0 50px rgba(240, 75, 60, 0.4),
+            0 4px 15px rgba(240, 75, 60, 0.4);
     }
-    50% { 
+    50% {
         transform: translateX(-50%) scale(1.1);
-        box-shadow: 
-            0 0 0 3px #ff3b3b,
-            0 0 35px rgba(255, 59, 59, 1),
-            0 0 70px rgba(255, 59, 59, 0.6),
-            0 4px 20px rgba(255, 59, 59, 0.6);
+        box-shadow:
+            0 0 0 3px var(--primary),
+            0 0 35px rgba(240, 75, 60, 1),
+            0 0 70px rgba(240, 75, 60, 0.6),
+            0 4px 20px rgba(240, 75, 60, 0.6);
     }
 }
 
@@ -280,7 +283,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: radial-gradient(circle, rgba(255, 105, 180, 0.6) 0%, rgba(255, 105, 180, 0.6) 50%, rgba(255, 105, 180, 0.3) 70%, transparent 100%);
+        background: radial-gradient(circle, rgba(212, 61, 43, 0.6) 0%, rgba(212, 61, 43, 0.6) 50%, rgba(212, 61, 43, 0.3) 70%, transparent 100%);
         border-radius: 50%;
         animation: ripple-pink-mobile 3.5s ease-out infinite;
         pointer-events: none;
@@ -319,12 +322,12 @@
     }
     
     .current-dot {
-        background: #ff3b3b !important;
-        box-shadow: 
-            0 0 0 3px #ff3b3b,
-            0 0 25px rgba(255, 59, 59, 0.8),
-            0 0 50px rgba(255, 59, 59, 0.4),
-            0 4px 15px rgba(255, 59, 59, 0.4) !important;
+        background: var(--primary) !important;
+        box-shadow:
+            0 0 0 3px var(--primary),
+            0 0 25px rgba(240, 75, 60, 0.8),
+            0 0 50px rgba(240, 75, 60, 0.4),
+            0 4px 15px rgba(240, 75, 60, 0.4) !important;
         transform: translateX(-50%) !important;
         animation: pulse-mobile 2s ease-in-out infinite;
         position: relative;
@@ -339,7 +342,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: radial-gradient(circle, rgba(255, 59, 59, 0.6) 0%, rgba(255, 59, 59, 0.6) 50%, rgba(255, 59, 59, 0.3) 70%, transparent 100%);
+        background: radial-gradient(circle, rgba(240, 75, 60, 0.6) 0%, rgba(240, 75, 60, 0.6) 50%, rgba(240, 75, 60, 0.3) 70%, transparent 100%);
         border-radius: 50%;
         animation: ripple-mobile 3s ease-out infinite;
         pointer-events: none;
@@ -416,7 +419,7 @@
 
 .timeline-label {
     position: absolute;
-    top: -50px;
+    top: -60px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
@@ -443,8 +446,8 @@
 
 /* Red label for present (current) */
 .current-dot .timeline-label {
-    color: #ff3b3b;
-    border: 1px solid #ff3b3b;
+    color: var(--primary);
+    border: 1px solid var(--primary);
     background: rgba(255, 255, 255, 0.95);
     top: 50%;
     left: calc(100% + 35px);

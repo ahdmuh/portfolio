@@ -22,10 +22,13 @@ function generateProjectCard(project, index) {
     // First 3 projects visible, rest hidden (matches original behavior)
     const displayStyle = index < 3 ? '' : 'style="display: none;"';
     
+    // Generate poster path from video source
+    const posterPath = project.videoSource.replace('/demos/', '/posters/').replace('.mp4', '-poster.jpg');
+
     return `
         <div class="project-card" data-video="${project.id}-demo.mp4" ${displayStyle}>
             <div class="project-video-container">
-                <video class="project-video" muted preload="metadata" loop playsinline webkit-playsinline>
+                <video class="project-video" muted preload="none" loop playsinline webkit-playsinline poster="${posterPath}">
                     <source src="${project.videoSource}" type="video/mp4">
                 </video>
                 <div class="video-overlay">

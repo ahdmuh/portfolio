@@ -232,7 +232,7 @@ export class HeroController extends ComponentBase {
         const colors = [
             "var(--primary)",      // Red for Software Engineer
             "var(--accent-pink)",  // Pink for Full-Stack Developer
-            "#ff7a8a",             // Orangish pink for AI Enthusiast
+            "#e65100",             // Dark vibrant orange for Game Developer
         ];
         let currentIndex = 0;
         
@@ -257,7 +257,7 @@ export class HeroController extends ComponentBase {
                 currentSpan.style.fontWeight = "600";
                 
                 // Update container colors with dramatic shift
-                const nextColorRgb = nextIndex === 0 ? '255, 59, 59' : nextIndex === 1 ? '255, 105, 180' : '255, 122, 138';
+                const nextColorRgb = nextIndex === 0 ? '255, 59, 59' : nextIndex === 1 ? '255, 105, 180' : '230, 81, 0';
                 this.muOptions.style.background = `rgba(${nextColorRgb}, 0.15)`;
                 this.muOptions.style.borderColor = colors[nextIndex];
                 this.muOptions.style.boxShadow = `0 0 20px rgba(${nextColorRgb}, 0.3)`;
@@ -266,23 +266,20 @@ export class HeroController extends ComponentBase {
                 currentSpan.style.transform = "translateY(30px) rotateX(-90deg) scale(0.6)";
                 
                 setTimeout(() => {
-                    // Dramatic entrance with bounce and glow
                     currentSpan.style.opacity = "1";
                     currentSpan.style.transform = "translateY(0) rotateX(0deg) scale(1.1)";
-                    currentSpan.style.textShadow = `0 0 10px ${colors[nextIndex]}60`;
+                    currentSpan.style.textShadow = `0 2px 4px rgba(0, 0, 0, 0.4), 0 3px 8px rgba(0, 0, 0, 0.3), 0 5px 15px rgba(0, 0, 0, 0.2), 0 0 10px ${colors[nextIndex]}60`;
                     this.muOptions.style.transform = "scale(1.05) rotateY(0deg)";
                     this.muOptions.style.filter = "blur(0px)";
-                    
-                    // Settle with gentle pulse
+
                     setTimeout(() => {
                         currentSpan.style.transform = "translateY(0) rotateX(0deg) scale(1)";
-                        currentSpan.style.textShadow = `0 0 5px ${colors[nextIndex]}30`;
+                        currentSpan.style.textShadow = `0 2px 4px rgba(0, 0, 0, 0.4), 0 3px 8px rgba(0, 0, 0, 0.3), 0 5px 15px rgba(0, 0, 0, 0.2), 0 0 5px ${colors[nextIndex]}30`;
                         this.muOptions.style.transform = "scale(1)";
                         this.muOptions.style.boxShadow = `0 0 15px rgba(${nextColorRgb}, 0.2)`;
-                        
-                        // Final settle
+
                         setTimeout(() => {
-                            currentSpan.style.textShadow = "none";
+                            currentSpan.style.textShadow = "";
                             this.muOptions.style.boxShadow = `0 4px 15px rgba(${nextColorRgb}, 0.1)`;
                         }, 300);
                     }, 200);

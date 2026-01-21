@@ -179,7 +179,7 @@
 
 @media (min-width: 1300px) {
     .container {
-        margin: 0 auto 0 calc(50% - 600px + 20px);
+        margin: 0 auto;
     }
 }
 
