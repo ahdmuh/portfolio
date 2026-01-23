@@ -318,7 +318,7 @@
     justify-content: center;
     color: white;
     pointer-events: none;
-    transition: opacity 0.15s ease;
+    transition: opacity 0.3s ease 0s;
     will-change: opacity;
     backface-visibility: hidden;
 }
@@ -370,6 +370,7 @@
 
     .project-card:hover .video-overlay {
         opacity: 0;
+        transition-delay: 0.4s;
     }
 
     .project-card:hover .video-controls {

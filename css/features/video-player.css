@@ -8,16 +8,14 @@
 
 .fullscreen-overlay {
     position: fixed;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.95);
     z-index: 999999;
     display: none;
     opacity: 0;
     transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    /* Force overlay to cover everything */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -320,26 +318,22 @@
 
 /* Mobile Safari specific adjustments for address bar */
 @media (max-width: 768px) {
-    /* Keep video container normal, only adjust controls */
     .fullscreen-video-container {
         width: 100vw;
         height: 100vh;
     }
-    
-    /* Adjust header to avoid status bar but keep video centered */
+
     .video-header {
-        top: 30px; /* Fixed position to avoid status bar */
+        top: max(30px, env(safe-area-inset-top));
         left: 20px;
         right: 20px;
     }
-    
-    /* Adjust bottom controls to avoid Safari address bar */
+
     .video-bottom-controls {
-        bottom: 80px; /* Higher position to clear Safari address bar */
+        bottom: max(80px, calc(env(safe-area-inset-bottom) + 60px));
         padding: 15px 20px 20px 20px;
     }
-    
-    /* Center controls stay perfectly centered - no adjustment needed */
+
     .video-center-controls {
         transform: translate(-50%, -50%);
     }
@@ -349,14 +343,28 @@
 @supports (-webkit-touch-callout: none) {
     @media (max-width: 768px) {
         .fullscreen-overlay {
-            /* Keep overlay covering full viewport */
             height: 100vh;
+            height: 100dvh;
+            min-height: -webkit-fill-available;
         }
-        
+
         .fullscreen-video-container {
-            /* Keep video container normal size */
             height: 100vh;
+            height: 100dvh;
         }
+    }
+}
+
+@media (max-width: 768px) {
+    .fullscreen-overlay {
+        height: 100vh;
+        height: 100dvh;
+        min-height: 100vh;
+    }
+
+    .fullscreen-video-container {
+        height: 100vh;
+        height: 100dvh;
     }
 }
 
