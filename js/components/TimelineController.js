@@ -66,12 +66,12 @@ export class TimelineController extends ComponentBase {
      * Setup timeline intersection observer - 
      */
     setupTimelineObserver() {
+        const isMobile = window.innerWidth <= 768;
         const observerOptions = {
-            threshold: this.options.threshold,
-            rootMargin: this.options.rootMargin
+            threshold: isMobile ? 0.1 : this.options.threshold,
+            rootMargin: isMobile ? '0px 0px -50px 0px' : this.options.rootMargin
         };
 
-        // Timeline animation with enhanced stagger - 
         this.observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
@@ -81,15 +81,14 @@ export class TimelineController extends ComponentBase {
                             item.classList.add("visible");
                         }, index * this.options.staggerDelay);
                     });
-                    
+
                     this.log(`Animated ${items.length} timeline items with stagger`);
                 }
             });
         }, observerOptions);
 
-        // Observe the timeline container
         this.observer.observe(this.timeline);
-        
+
         this.log('Timeline intersection observer initialized');
     }
 
