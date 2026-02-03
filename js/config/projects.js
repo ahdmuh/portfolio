@@ -69,10 +69,10 @@ export const FEATURED_PROJECTS = [
     },
 	{
 		id: 'briar-bot',
-		title: 'Briar Bot',
+		title: 'BriarBot',
 		description: 'A Discord bot serving hundreds of users across multiple servers with Epic Seven character build analysis. Provides real-time build statistics from thousands of players, popular gear recommendations, and automated visual stat cards with seamless Discord integration.',
 		videoSource: '../../assets/demos/demo-briarbot.mp4',
-		technologies: ['Node.js', 'Discord.js', 'Puppeteer', 'Docker', 'PM2'],
+		technologies: ['Node.js', 'Docker'],
 		links: [
 			{
 				type: 'github',
@@ -89,7 +89,7 @@ export const FEATURED_PROJECTS = [
         title: 'The BYA Machine',
         description: 'Built a handheld gaming console from scratch! Collaborated with a multidisciplinary team to design physical components and wrote optimized embedded C software for smooth multi-game gameplay.',
         videoSource: '../../assets/demos/demo-bya-machine.mp4',
-        technologies: ['C','C++','Arduino', 'Embedded Systems', 'Hardware Design'],
+        technologies: ['C','C++','Arduino', 'Embedded Systems'],
         links: [
             {
                 type: 'github',
@@ -106,7 +106,7 @@ export const FEATURED_PROJECTS = [
 		title: 'Reccify',
 		description: 'Android app that knows your music taste better than you do! Features custom algorithms for personalized recommendations and integrates Spotify\'s Web API for seamless music discovery.',
 		videoSource: '../../assets/demos/demo-reccify.mp4',
-		technologies: ['Java', 'Android Studio', 'Spotify API', 'Mobile UI/UX'],
+		technologies: ['Java', 'Android Studio', 'API', 'Mobile UI/UX'],
 		links: [
 			{
 				type: 'github',
@@ -123,7 +123,7 @@ export const FEATURED_PROJECTS = [
         title: 'Flight Management System',
         description: 'Comprehensive flight management program using object-oriented C++ design. Handles flight details, passenger management, and seating with efficient data structures and clean interfaces.',
         videoSource: '../../assets/demos/demo-flightmanagement.mp4',
-        technologies: ['C++', 'OOP Design', 'Data Structures', 'File Handling'],
+        technologies: ['C++', 'Object-Oriented Programming', 'Data Structures', 'File Handling'],
         links: [
             {
                 type: 'github',
