@@ -1,0 +1,7 @@
+# Backup and optimized demo videos
+assets/demos-backup/
+assets/demos-optimized/
+
+# macOS metadata files
+.DS_Store
+**/.DS_Store

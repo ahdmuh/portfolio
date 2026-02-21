@@ -134,7 +134,7 @@ export class VideoController extends ComponentBase {
             const rewindBtn = controls.querySelector('.rewind-btn');
             const forwardBtn = controls.querySelector('.forward-btn');
             const fullscreenBtn = controls.querySelector('.fullscreen-btn');
-            
+
             restartBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.restartVideo(card);
@@ -648,7 +648,7 @@ export class VideoController extends ComponentBase {
         fullscreenVideo.src = videoSource;
         // In fullscreen, allow unmuting (start unmuted for better user experience)
         fullscreenVideo.muted = false;
-        fullscreenVideo.volume = video.volume || 1;
+        fullscreenVideo.volume = 1.0; // Always start at full volume in fullscreen
         
         // Prevent native iOS fullscreen and controls
         fullscreenVideo.setAttribute('playsinline', 'true');
@@ -667,8 +667,11 @@ export class VideoController extends ComponentBase {
         const handleVideoReady = () => {
             // Get the most current time from the original video
             const mostCurrentTime = video.currentTime;
-            
-            
+
+            // Ensure unmuted with full volume in fullscreen
+            fullscreenVideo.muted = false;
+            fullscreenVideo.volume = 1.0;
+
             // Set the current time first
             if (fullscreenVideo.duration) {
                 fullscreenVideo.currentTime = Math.min(mostCurrentTime, fullscreenVideo.duration);
@@ -676,9 +679,9 @@ export class VideoController extends ComponentBase {
                 // If duration not available yet, set it anyway (it will be clamped)
                 fullscreenVideo.currentTime = mostCurrentTime;
             }
-            
+
             // Default behavior: Always play in fullscreen
-            
+
             fullscreenVideo.play().catch(error => {
                 console.error('Failed to play fullscreen video:', error);
                 // If autoplay fails, show play button prominently
