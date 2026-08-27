@@ -51,12 +51,15 @@
        ============================================================================ */
 
     .about-content {
-        grid-template-columns: 1fr;
-        text-align: center;
+        text-align: left;
     }
 
-    .profile-container {
-        margin: 0 auto;
+    .about-text {
+        display: block;
+    }
+
+    .skills-grid {
+        margin-top: 2rem;
     }
 
     /* ============================================================================
