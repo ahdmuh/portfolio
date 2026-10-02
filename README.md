@@ -2,7 +2,7 @@
 
 # portfolio
 
-My personal site, with my background, project demos, and a small game to play on the front page.
+My personal portfolio, built to be played with.
 
 <p>
   <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-F59E0B?style=flat&logo=javascript&logoColor=white">
@@ -16,7 +16,7 @@ My personal site, with my background, project demos, and a small game to play on
 
 ## About
 
-This is the source for my portfolio site, [ahdmuh.me](https://ahdmuh.me). It is plain HTML, CSS, and JavaScript with no build step, published with GitHub Pages.
+This is the source for my portfolio site, [ahdmuh.me](https://ahdmuh.me). It showcases my projects and career highlights, along with a small game and a few fun easter eggs :)
 
 ## Credits
 

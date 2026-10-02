@@ -662,7 +662,7 @@ header { position: relative; }
 	display: block;
 	width: 80%;
 	border-radius: 10px;
-	background: #000;
+	background: var(--card);
 	box-shadow: var(--lift), 0 0 0 1px var(--underline);
 	overflow: hidden;
 	transition: transform .25s cubic-bezier(.2, .8, .25, 1);
@@ -705,12 +705,26 @@ header { position: relative; }
 	pointer-events: none;
 }
 
-.window video {
-	width: 100%;
+/* The screen: a still that fades in once it has loaded, with the hover preview
+   over it. Never black while waiting, so arriving on the page doesn't flash. */
+.screen {
+	position: relative;
+	display: block;
 	aspect-ratio: 16 / 9;
-	object-fit: cover;
-	background: #000;
+	background: color-mix(in srgb, var(--ink) 7%, var(--card));
 }
+
+.screen .thumb, .screen video {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	opacity: 0;
+	transition: opacity .35s ease;
+}
+
+.screen .thumb.is-loaded, .has-frames .screen video { opacity: 1; }
 
 .play-chip {
 	position: absolute;
@@ -1207,7 +1221,7 @@ a.row-icon:active { transform: scale(.93); }
 	.page > *, .site-foot, .row, .card > *,
 	.is-leaving .page, .is-leaving .site-foot { animation: none; }
 
-	.shelf-btn, .shelf-btn svg, a.row-icon, .dex-card { transition: none; }
+	.shelf-btn, .shelf-btn svg, a.row-icon, .dex-card, .screen .thumb, .screen video { transition: none; }
 
 	.squiggle path,
 	.site-nav.is-ready a[aria-current="page"] .squiggle path,

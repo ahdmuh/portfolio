@@ -13,6 +13,9 @@ function applyTheme(theme) {
 	document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
 		btn.setAttribute('aria-label', `Switch to ${next} theme`);
 	});
+	// the tab icon changes with it (theme-init.js sets it on load)
+	const icon = document.getElementById('favicon');
+	if (icon) icon.href = `/assets/favicon-${theme}.png`;
 	const meta = document.querySelector('meta[name="theme-color"]');
 	// Empty if the stylesheet hasn't applied yet; the static value in the markup stands in.
 	const bg = getComputedStyle(root).getPropertyValue('--bg').trim();
@@ -228,6 +231,8 @@ function initShelves() {
 
 const demoSrc = id => `/assets/demos/demo-${id}.mp4`;
 const posterSrc = id => `/assets/posters/demo-${id}-poster.jpg`;
+// a small version of the poster for the cards, which show it at a fraction of its size
+const thumbSrc = id => `/assets/posters/demo-${id}-thumb.jpg`;
 
 function cardHTML(project) {
 	const tech = project.tech.map(name => `
@@ -237,7 +242,10 @@ function cardHTML(project) {
 			<button class="card-face" type="button" data-demo="${project.id}" aria-label="Play the ${project.title} demo, ${project.length}">
 				<span class="window">
 					<span class="window-bar"><i></i><i></i><i></i><span class="window-title">${project.title}</span></span>
-					<video muted loop playsinline preload="none" poster="${posterSrc(project.id)}" tabindex="-1" aria-hidden="true"></video>
+					<span class="screen">
+						<img class="thumb" src="${thumbSrc(project.id)}" alt="" width="640" height="360" decoding="async">
+						<video muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"></video>
+					</span>
 					<span class="play-chip">
 						<svg width="8" height="9" viewBox="0 0 8 9" aria-hidden="true"><path d="M.5.8v7.4a.5.5 0 0 0 .76.43l6.1-3.7a.5.5 0 0 0 0-.86L1.26.37A.5.5 0 0 0 .5.8Z" fill="currentColor"/></svg>
 						${project.length}
@@ -274,6 +282,14 @@ function wireCard(card, player) {
 	const preview = face.querySelector('video');
 	let hoverTimer;
 
+	// The still fades in once it is decoded, so a card never shows an empty or
+	// half-drawn screen; the video sits over it, unseen until it has frames.
+	const thumb = face.querySelector('.thumb');
+	const shown = () => thumb.classList.add('is-loaded');
+	if (thumb.decode) thumb.decode().then(shown, shown);
+	else if (thumb.complete) shown();
+	else thumb.addEventListener('load', shown, { once: true });
+
 	const stopPreview = () => {
 		clearTimeout(hoverTimer);
 		preview.pause();
@@ -284,7 +300,7 @@ function wireCard(card, player) {
 		if (!canHover.matches || reduceMotion.matches) return;
 		hoverTimer = setTimeout(() => {
 			if (!preview.getAttribute('src')) preview.src = demoSrc(project.id);
-			preview.play().then(() => face.classList.add('is-previewing')).catch(() => {});
+			preview.play().then(() => face.classList.add('is-previewing', 'has-frames')).catch(() => {});
 		}, 140);
 	});
 	face.addEventListener('pointerleave', stopPreview);
@@ -296,6 +312,7 @@ function wireCard(card, player) {
 		// Let go of the file before the player asks for it: Chromium stalls a
 		// second video on a URL that a paused one is still holding open.
 		if (preview.getAttribute('src')) {
+			face.classList.remove('has-frames');
 			preview.removeAttribute('src');
 			preview.load();
 		}
@@ -338,6 +355,14 @@ function initDemoLinks() {
 		if (item) player.embed(item, { origin: link });
 		else player.open(project, { src: demoSrc(project.id), poster: posterSrc(project.id), origin: link });
 	}));
+}
+
+// Reaching for the Work tab fetches its card stills, so they are there on arrival.
+function initWorkWarmup() {
+	const tab = document.querySelector('.site-nav a[href="/work/"]');
+	if (!tab || tab.hasAttribute('aria-current')) return;
+	const warm = () => PROJECTS.forEach(project => { new Image().src = thumbSrc(project.id); });
+	for (const type of ['pointerenter', 'focus', 'touchstart']) tab.addEventListener(type, warm, { once: true, passive: true });
 }
 
 /* ---------- work page: the snake ---------- */
@@ -547,6 +572,7 @@ initPageTransitions();
 initSquiggles();
 initShelves();
 initDemoLinks();
+initWorkWarmup();
 initSnake();
 initClock();
 restoreTabScroll();
