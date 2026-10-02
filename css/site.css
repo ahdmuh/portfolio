@@ -1,0 +1,1220 @@
+/* ---------- tokens ---------- */
+
+:root {
+	color-scheme: light;
+	--bg: #fafaf9;
+	--ink: #121214;
+	--text: #636268;
+	--mute: #7d7c83;
+	--rule: #e6e5e2;
+	--card: #f1f1ef;
+	--underline: #cfcdd3;
+	--disabled: #c4c3c8;
+	/* one red for both themes */
+	--accent: #cc3430;
+	/* the two dragons: Reshiram's sun red, Zekrom's deep blue */
+	--sun: #dc4a16;
+	--deep: #1d3fae;
+
+	/* hero artwork: its black and its white */
+	--art-lo: #0d0d0f;
+	--art-hi: #fafaf9;
+
+	--lift: 0 1px 1px #1010140f, 0 10px 18px -6px #10101429, 0 28px 44px -16px #1010144d;
+
+	--sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+	--mono: "Fragment Mono", ui-monospace, "SF Mono", Menlo, monospace;
+	--body: 15px;
+	--small: 13px;
+
+	--col: 24rem;
+	--wide: 40rem;
+	--card-w: 22rem;
+	/* --vw is the page's real width, set from site.js: 100vw also counts a
+	   classic scrollbar, which made full-bleed rows overflow sideways. */
+	--edge: max(1rem, (var(--vw, 100vw) - var(--col)) / 2);
+}
+
+:root[data-theme="dark"] {
+	color-scheme: dark;
+	/* The blacks of the hero artwork: the page is the black dragon's median
+	   tone, cards its lighter scales, rules and underlines its highlights. */
+	/* lifted a little so they still read on black */
+	--sun: #f0602f;
+	--deep: #4f7cf2;
+	--bg: #0b0b0b;
+	--ink: #f2f2f2;
+	--text: #a3a3a3;
+	--mute: #7a7a7a;
+	--rule: #212121;
+	--card: #161616;
+	--underline: #3a3a3a;
+	--disabled: #454545;
+
+	--art-lo: #0b0b0b;
+	--art-hi: #f2f2f2;
+
+	--lift: 0 1px 1px #0000004d, 0 10px 18px -6px #00000080, 0 28px 44px -16px #000000b3;
+}
+
+/* ---------- base ---------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+	-webkit-text-size-adjust: 100%;
+	-webkit-tap-highlight-color: transparent;
+	scrollbar-gutter: stable;
+	overflow-x: clip;
+	/* no rubber-banding past the ends of the page */
+	overscroll-behavior: none;
+	background: var(--bg);
+}
+
+body {
+	margin: 0;
+	/* WebKit can still scroll the page sideways past html's clip; clipping here too stops it */
+	overflow-x: clip;
+	overscroll-behavior: none;
+	background: var(--bg);
+	color: var(--text);
+	font: 480 var(--body) / 1.55 var(--sans);
+	font-variant-numeric: tabular-nums;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+p, figure, h1, h2 { margin: 0; }
+img, video, canvas, svg { display: block; }
+button { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+
+::selection { background: color-mix(in oklab, var(--accent) 22%, transparent); }
+
+:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 3px;
+	border-radius: 4px;
+}
+
+em, strong, .ink {
+	font-style: normal;
+	font-weight: inherit;
+	color: var(--ink);
+}
+
+a {
+	color: inherit;
+	text-decoration: underline var(--underline);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+}
+
+a:hover {
+	color: var(--ink);
+	text-decoration-color: var(--ink);
+}
+
+/* ---------- layout ---------- */
+
+.page {
+	width: min(var(--col), 100% - 2rem);
+	margin-inline: auto;
+}
+
+/* one gap between every block of every page */
+.page > * + * { margin-top: 40px; }
+.page > .wide + * { margin-top: 36px; }
+
+.wide {
+	--w: min(var(--wide), var(--vw, 100vw) - 2rem);
+	width: var(--w);
+	margin-inline: calc((100% - var(--w)) / 2);
+}
+
+.prose p + p { margin-top: 16px; }
+
+.label {
+	font-size: var(--small);
+	color: var(--mute);
+	margin: 0 0 14px;
+}
+
+.small {
+	font-size: var(--small);
+	color: var(--mute);
+}
+
+/* ---------- nav ---------- */
+
+header { position: relative; }
+
+.site-nav {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 22px;
+	padding-top: 36px;
+	margin-bottom: 56px;
+}
+
+.site-nav a {
+	position: relative;
+	display: inline-block;
+	padding-block: 4px 9px;
+	color: var(--mute);
+	text-decoration: none;
+}
+
+.site-nav a:hover,
+.site-nav a[aria-current="page"] { color: var(--ink); }
+
+.squiggle {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	overflow: visible;
+	pointer-events: none;
+}
+
+.squiggle path {
+	fill: none;
+	stroke: var(--accent);
+	stroke-width: 1.5px;
+	stroke-linecap: round;
+	stroke-dasharray: 1;
+	stroke-dashoffset: 1px;
+	stroke-opacity: 0;
+	transition: stroke-dashoffset .18s ease-in, stroke-opacity 0s linear .18s;
+}
+
+.site-nav.is-ready a[aria-current="page"] .squiggle path {
+	stroke-dashoffset: 0;
+	stroke-opacity: 1;
+	transition: stroke-dashoffset .42s cubic-bezier(.3, 0, .2, 1) .12s, stroke-opacity 0s linear .12s;
+}
+
+/* Switching tabs: the highlight jumps to the clicked tab at once, and the
+   next page arrives with it already drawn. */
+.site-nav.is-switching .squiggle path { transition: none; }
+.site-nav.is-switching a[aria-current="page"] .squiggle path { transition: stroke-dashoffset .13s ease-out; }
+.site-nav.is-instant .squiggle path { transition: none !important; }
+
+.theme-toggle {
+	position: absolute;
+	top: 37px;
+	right: max(20px, env(safe-area-inset-right));
+	display: grid;
+	place-items: center;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	border: 0;
+	border-radius: 8px;
+	background: none;
+	color: var(--mute);
+	cursor: pointer;
+}
+
+@media (max-width: 480px) {
+	.site-nav { gap: 18px; }
+	.theme-toggle { right: max(8px, env(safe-area-inset-right)); }
+}
+
+/* the narrowest phones: keep the last link clear of the theme toggle */
+@media (max-width: 350px) {
+	.site-nav { gap: 13px; padding-right: 26px; }
+}
+
+.theme-toggle:hover { color: var(--ink); }
+
+.theme-toggle svg { transition: transform .5s cubic-bezier(.3, 0, .2, 1); }
+[data-theme="dark"] .theme-toggle svg { transform: rotate(180deg); }
+
+/* ---------- hero artwork ---------- */
+
+.hero-art { margin-top: -44px; }
+
+.art {
+	position: relative;
+	aspect-ratio: 2 / 1;
+	width: 100%;
+	touch-action: pan-y;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+@media (max-width: 640px) {
+	.art { aspect-ratio: 16 / 10; }
+}
+
+.art canvas {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+
+/* Shown only when WebGL isn't available: the plain image, blended into the page. */
+.art img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 24px;
+	opacity: 0;
+	mix-blend-mode: multiply;
+}
+
+[data-theme="dark"] .art img { mix-blend-mode: screen; }
+.art.no-gl img { opacity: 1; }
+.art.no-gl canvas { display: none; }
+
+.art-caption {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 5px;
+	margin: -22px 0 0;
+	font-size: 12px;
+	color: var(--mute);
+}
+
+/* A link that starts with a small icon. The underline is a border, so it
+   runs under the icon as well as the words. */
+.icon-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
+	border-bottom: 1px solid transparent;
+	line-height: 1.25;
+	text-decoration: none;
+}
+
+.icon-link svg { flex: none; }
+.icon-link:hover { border-bottom-color: currentColor; }
+
+/* one that is underlined all the time, like the links in the text */
+.icon-link.is-lined { border-bottom-color: var(--underline); }
+.icon-link.is-lined:hover { border-bottom-color: var(--ink); }
+
+/* ---------- name ---------- */
+
+.name {
+	position: relative;
+	display: inline-block;
+	color: var(--accent);
+}
+
+.name .squiggle { bottom: -3px; }
+
+.name .squiggle path {
+	stroke-width: 1.4px;
+	stroke-dashoffset: 0;
+	stroke-opacity: .55;
+	transition: none;
+}
+
+.name:hover .squiggle path {
+	stroke-opacity: 1;
+	animation: name-draw .52s cubic-bezier(.3, 0, .2, 1);
+}
+
+@keyframes name-draw { from { stroke-dashoffset: 1; } }
+
+/* ---------- pokédex cards (js/dex.js) ---------- */
+
+.dex {
+	cursor: pointer;
+	text-decoration: underline dotted var(--underline);
+	text-underline-offset: 3px;
+}
+
+.dex[data-dex="reshiram"], .dex-card[data-dex="reshiram"] .dex-name { color: var(--sun); }
+.dex[data-dex="zekrom"], .dex-card[data-dex="zekrom"] .dex-name { color: var(--deep); }
+
+.dex:hover, .dex:focus-visible { text-decoration-color: currentColor; }
+
+.dex-card {
+	position: absolute;
+	/* parked at the top of the page until it is first placed, so it never adds to the page's height */
+	top: 0;
+	left: 0;
+	z-index: 70;
+	display: grid;
+	grid-template-columns: 88px minmax(0, 1fr);
+	gap: 14px;
+	width: min(21rem, 100vw - 24px);
+	padding: 12px 14px 12px 12px;
+	border: 1px solid var(--rule);
+	border-radius: 14px;
+	background: var(--bg);
+	box-shadow: var(--lift);
+	font-size: var(--small);
+	line-height: 1.5;
+	color: var(--text);
+	opacity: 0;
+	transform: translateY(-3px) scale(.985);
+	transform-origin: var(--pointer, 50%) 0;
+	pointer-events: none;
+	/* a soft fade with barely any movement; only opacity and transform, so it never drags */
+	transition: opacity .22s ease-out, transform .26s cubic-bezier(.25, .1, .25, 1);
+	will-change: opacity, transform;
+}
+
+/* open, it can be hovered and its link clicked; the strip above it bridges the gap to the name */
+.dex-card.is-open { pointer-events: auto; }
+
+.dex-card::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: -12px;
+	height: 12px;
+}
+
+.dex-card.is-above::after {
+	top: auto;
+	bottom: -12px;
+}
+
+.dex-card.is-above {
+	transform: translateY(3px) scale(.985);
+	transform-origin: var(--pointer, 50%) 100%;
+}
+
+.dex-card.is-open {
+	opacity: 1;
+	transform: none;
+}
+
+/* the pointer towards the name */
+.dex-card::before {
+	content: "";
+	position: absolute;
+	left: calc(var(--pointer, 50%) - 5px);
+	top: -6px;
+	width: 10px;
+	height: 10px;
+	border: 1px solid var(--rule);
+	border-right: 0;
+	border-bottom: 0;
+	border-radius: 2px 0 0 0;
+	background: var(--bg);
+	transform: rotate(45deg);
+}
+
+.dex-card.is-above::before {
+	top: auto;
+	bottom: -6px;
+	transform: rotate(225deg);
+}
+
+/* left column: the sprite on its own tile, like a dex screen, with its measurements under it */
+.dex-side {
+	display: grid;
+	grid-template-rows: auto auto 1fr;
+	gap: 8px;
+	justify-items: start;
+}
+
+/* where the sprite comes from, at the foot of the column */
+.dex-source {
+	align-self: end;
+	gap: 4px;
+	margin-left: 2px;
+	font-size: 11px;
+}
+
+.dex-source img { border-radius: 2px; }
+
+.dex-sprite {
+	display: grid;
+	place-items: center;
+	width: 100%;
+	aspect-ratio: 1;
+	border-radius: 10px;
+	background: var(--card);
+	overflow: hidden;
+}
+
+.dex-sprite img {
+	max-width: 84%;
+	max-height: 84%;
+	image-rendering: pixelated;
+}
+
+.dex-card.no-sprite .dex-sprite { display: none; }
+
+.dex-stats {
+	display: grid;
+	gap: 1px;
+	margin: 0;
+	padding-left: 2px;
+	font: 11px / 1.45 var(--mono);
+	letter-spacing: -.01em;
+	color: var(--mute);
+}
+
+.dex-entry p { margin: 0; }
+
+.dex-no {
+	font: 11px / 1.4 var(--mono);
+	letter-spacing: -.01em;
+	color: var(--mute);
+}
+
+.dex-name {
+	font-size: var(--body);
+	line-height: 1.3;
+	color: var(--ink);
+}
+
+.dex-kind {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 3px 7px;
+	font-size: 12px;
+	color: var(--mute);
+}
+
+/* the types, as their badges from the games */
+.dex-types {
+	display: inline-flex;
+	gap: 3px;
+}
+
+.dex-types img { image-rendering: pixelated; }
+.dex-bio { margin-top: 6px !important; }
+
+/* ---------- shelf ---------- */
+
+.shelf {
+	width: var(--vw, 100vw);
+	margin-inline: calc(50% - var(--vw, 100vw) / 2);
+}
+
+.shelf-track {
+	display: flex;
+	gap: 20px;
+	padding-inline: var(--edge) 1rem;
+	padding-bottom: 4px;
+	overflow-x: auto;
+	overscroll-behavior-x: none;
+	scroll-snap-type: x mandatory;
+	scroll-padding-inline: var(--edge);
+	scrollbar-width: none;
+}
+
+.shelf-track::-webkit-scrollbar { display: none; }
+
+.shelf-nav {
+	display: flex;
+	gap: 8px;
+	margin-top: 20px;
+	padding-inline: var(--edge);
+}
+
+.shelf[data-fits] .shelf-nav { display: none; }
+
+/* ---------- work page: the snake (see initSnake) ---------- */
+
+.snake {
+	--fade: clamp(14px, 9vw, 150px);
+	width: var(--vw, 100vw);
+	margin-inline: calc(50% - var(--vw, 100vw) / 2);
+}
+
+/* Cards are placed by script and dissolve into the page at both edges.
+   Sideways drags belong to the snake; vertical ones still scroll the page. */
+.snake-stage {
+	position: relative;
+	overflow: clip;
+	touch-action: pan-y;
+	-webkit-mask-image: linear-gradient(to right, #0000, #000 var(--fade), #000 calc(100% - var(--fade)), #0000);
+	mask-image: linear-gradient(to right, #0000, #000 var(--fade), #000 calc(100% - var(--fade)), #0000);
+}
+
+.snake-stage:focus-visible { outline-offset: -2px; }
+
+.snake-stage .card {
+	position: absolute;
+	top: 0;
+	left: 0;
+	will-change: transform;
+}
+
+.snake[data-fits] .shelf-nav { display: none; }
+
+/* ---------- previous / next buttons ---------- */
+
+.shelf-btn {
+	display: grid;
+	place-items: center;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border: 1px solid var(--underline);
+	border-radius: 50%;
+	background: none;
+	color: var(--ink);
+	cursor: pointer;
+	transition: background-color .2s, border-color .2s, color .2s, transform .2s cubic-bezier(.2, .8, .2, 1);
+}
+
+.shelf-btn svg { transition: transform .25s cubic-bezier(.2, .8, .2, 1); }
+
+/* hover: the button fills with ink and its arrow leans the way it points */
+.shelf-btn:hover:not(:disabled) {
+	border-color: var(--ink);
+	background: var(--ink);
+	color: var(--bg);
+}
+
+.shelf-btn[data-dir="-1"]:hover:not(:disabled) svg { transform: translateX(-2px); }
+.shelf-btn[data-dir="1"]:hover:not(:disabled) svg { transform: translateX(2px); }
+.shelf-btn:active:not(:disabled) { transform: scale(.92); }
+
+.shelf-btn:disabled {
+	border-color: var(--rule);
+	color: var(--disabled);
+	cursor: default;
+}
+
+/* ---------- cards ---------- */
+
+.card {
+	flex: none;
+	width: min(var(--card-w), var(--vw, 100vw) - 3rem);
+	scroll-snap-align: start;
+}
+
+
+.card-face {
+	position: relative;
+	display: grid;
+	place-items: center;
+	width: 100%;
+	aspect-ratio: 352 / 330;
+	padding: 0 0 16px;
+	border: 0;
+	border-radius: 24px;
+	background: var(--card);
+	text-align: left;
+	cursor: pointer;
+	overflow: hidden;
+	isolation: isolate;
+}
+
+.card-face:focus-visible { border-radius: 24px; }
+
+/* index page: a canvas sketch fills the face, with its formula along the bottom */
+.card-face.is-sketch {
+	aspect-ratio: 352 / 384;
+	padding: 0;
+	cursor: default;
+}
+
+.card-face > canvas.face {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.is-sketch .card-note {
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 12px;
+}
+
+.card-note math {
+	font-family: "STIX Two Math", "Cambria Math", math;
+	font-size: 15px;
+	color: var(--text);
+}
+
+.readout {
+	flex: none;
+	font-variant-numeric: tabular-nums;
+}
+
+/* work page: the window sits near the top of its card, the tools centred under it */
+.card-face[data-demo] {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	aspect-ratio: auto;
+	padding: 30px 0 0;
+}
+
+.card-face[data-demo] .card-note {
+	position: static;
+	justify-content: center;
+	max-width: calc(100% - 28px);
+	margin: 20px 0 18px;
+}
+
+.window {
+	position: relative;
+	display: block;
+	width: 80%;
+	border-radius: 10px;
+	background: #000;
+	box-shadow: var(--lift), 0 0 0 1px var(--underline);
+	overflow: hidden;
+	transition: transform .25s cubic-bezier(.2, .8, .25, 1);
+}
+
+.card-face:hover .window { transform: translateY(-3px); }
+.card-face:active .window { transform: scale(.985); }
+
+.window-bar {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	height: 26px;
+	padding-inline: 10px;
+	border-bottom: 1px solid var(--underline);
+	/* the same brushed grey chrome as the player this window opens into */
+	background:
+		repeating-linear-gradient(0deg, transparent 0 1px, color-mix(in srgb, var(--ink) 2.5%, transparent) 1px 2px),
+		var(--card);
+}
+
+.window-bar i {
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	background: #28c840;
+}
+
+.window-bar i:first-child { background: #ff5f57; }
+.window-bar i:nth-child(2) { background: #febc2e; opacity: .35; }
+
+.window-title {
+	position: absolute;
+	inset: 0;
+	text-align: center;
+	font-size: 11px;
+	line-height: 25px;
+	color: var(--ink);
+	pointer-events: none;
+}
+
+.window video {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	background: #000;
+}
+
+.play-chip {
+	position: absolute;
+	left: 8px;
+	bottom: 8px;
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	padding: 2px 8px 2px 7px;
+	border-radius: 999px;
+	background: #111111d1;
+	font: 11px / 18px var(--mono);
+	letter-spacing: -.01em;
+	color: #fff;
+	transition: opacity .2s;
+}
+
+.card-face.is-previewing .play-chip { opacity: 0; }
+
+.card-note {
+	position: absolute;
+	left: 18px;
+	right: 18px;
+	bottom: 14px;
+	display: flex;
+	gap: 10px;
+	font-size: 12px;
+	color: var(--mute);
+	white-space: nowrap;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+.tech {
+	flex: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+}
+
+/* single-colour logo, tinted with the text colour */
+.tech-icon {
+	width: 13px;
+	height: 13px;
+	background: currentColor;
+	-webkit-mask: var(--icon) center / contain no-repeat;
+	mask: var(--icon) center / contain no-repeat;
+}
+
+/* name and one-liner, centred under the card */
+.card-cap {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: baseline;
+	gap: 0 8px;
+	margin-top: 12px;
+	text-align: center;
+}
+
+.card-name { flex: none; color: var(--ink); text-decoration: none; }
+a.card-name:hover { text-decoration: underline; }
+.card-desc { font-size: var(--small); color: var(--mute); }
+
+/* ---------- player: an old-school QuickTime window, in monochrome ---------- */
+
+.qt {
+	width: min(56rem, 100vw - 2rem);
+	max-width: none;
+	padding: 0;
+	border: 0;
+	border-radius: 10px;
+	background: none;
+	color: var(--text);
+	box-shadow: var(--lift), 0 0 0 1px var(--underline);
+	overflow: hidden;
+}
+
+.qt:focus { outline: none; }
+.qt[open] { will-change: transform, opacity; }
+
+/* A plain veil: blurring the page behind it made the open and close animations stutter. */
+.qt::backdrop { background: color-mix(in oklab, var(--bg) 88%, transparent); }
+
+/* The window's own entrance and exit are run from player.js; the backdrop follows along. */
+/* Two separate keyframes: reversing the same one on an animation that has
+   already finished snaps the veil away instead of fading it. */
+.qt[open]::backdrop { animation: qt-veil-in .26s ease both; }
+.qt.is-closing::backdrop { animation: qt-veil-out .2s ease both; }
+@keyframes qt-veil-in { from { opacity: 0; } }
+@keyframes qt-veil-out { to { opacity: 0; } }
+
+/* The chrome is the card grey with a faint brushed grain, like the metal windows it borrows from. */
+.qt-window {
+	display: flex;
+	flex-direction: column;
+	background:
+		repeating-linear-gradient(0deg, transparent 0 1px, color-mix(in srgb, var(--ink) 2.5%, transparent) 1px 2px),
+		var(--card);
+}
+
+.qt-bar {
+	position: relative;
+	display: flex;
+	align-items: center;
+	height: 30px;
+	padding-inline: 11px;
+	border-bottom: 1px solid var(--underline);
+}
+
+.qt-lights {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	gap: 7px;
+}
+
+/* traffic lights: red closes, green goes full screen, yellow is switched off */
+.qt-light {
+	width: 12px;
+	height: 12px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	box-shadow: inset 0 0 0 .5px #00000033;
+}
+
+button.qt-light { cursor: pointer; }
+.qt-light.is-close { background: #ff5f57; }
+.qt-light.is-min { background: #febc2e; opacity: .35; }
+.qt-light.is-full { background: #28c840; }
+
+.qt-title {
+	position: absolute;
+	inset: 0;
+	padding-inline: 70px;
+	text-align: center;
+	font-size: var(--small);
+	line-height: 30px;
+	color: var(--ink);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	pointer-events: none;
+}
+
+.qt-stage {
+	position: relative;
+	aspect-ratio: 16 / 9;
+	max-height: calc(100dvh - 16rem);
+	width: 100%;
+	/* a still of the demo sits here (set from player.js) until the video is really playing */
+	background: #000 center / contain no-repeat;
+	overflow: hidden;
+}
+
+.qt-stage video {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	cursor: pointer;
+	opacity: 0;
+	transition: opacity .28s ease;
+}
+
+.qt-stage.has-frame video { opacity: 1; }
+
+.qt-spinner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 28px;
+	height: 28px;
+	margin: -14px;
+	border: 2.5px solid #ffffff40;
+	border-top-color: #fff;
+	border-radius: 50%;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity .15s;
+	animation: qt-spin .8s linear infinite paused;
+}
+
+/* only for a real stall: it waits most of a second before showing, and never shows on the way out */
+.qt-stage.is-waiting .qt-spinner {
+	opacity: 1;
+	transition: opacity .25s .9s;
+	animation-play-state: running;
+}
+
+.qt.is-closing .qt-spinner { opacity: 0; transition: none; }
+@keyframes qt-spin { to { transform: rotate(360deg); } }
+
+/* the control deck under the picture */
+.qt-deck {
+	display: grid;
+	gap: 9px;
+	padding: 10px 12px 11px;
+	border-top: 1px solid var(--underline);
+}
+
+/* recessed well: timecode, scrubber, length */
+.qt-well {
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	align-items: center;
+	gap: 10px;
+	height: 26px;
+	padding-inline: 9px;
+	border: 1px solid var(--underline);
+	border-radius: 6px;
+	background: var(--bg);
+	box-shadow: inset 0 1px 2px color-mix(in srgb, var(--ink) 9%, transparent);
+}
+
+.qt-time {
+	font: 11px / 1 var(--mono);
+	letter-spacing: -.01em;
+	color: var(--text);
+}
+
+.qt-controls {
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+	align-items: center;
+}
+
+.qt-volume, .qt-transport, .qt-extra {
+	display: flex;
+	align-items: center;
+}
+
+.qt-volume { gap: 4px; }
+.qt-volume .qt-range { width: 72px; }
+.qt-transport { gap: 7px; }
+.qt-extra { justify-self: end; }
+
+/* round, slightly raised buttons */
+.qt-btn {
+	display: grid;
+	place-items: center;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	border: 1px solid var(--underline);
+	border-radius: 50%;
+	background: linear-gradient(var(--bg), var(--card));
+	box-shadow: 0 1px 1px color-mix(in srgb, var(--ink) 10%, transparent);
+	color: var(--ink);
+	cursor: pointer;
+}
+
+.qt-btn:hover { border-color: var(--mute); }
+.qt-btn:active { background: var(--rule); box-shadow: inset 0 1px 2px color-mix(in srgb, var(--ink) 18%, transparent); }
+
+.qt-btn.is-flat {
+	border-color: transparent;
+	background: none;
+	box-shadow: none;
+	color: var(--text);
+}
+
+.qt-btn.is-flat:hover { color: var(--ink); }
+.qt-play { width: 40px; height: 40px; }
+.qt-play svg { width: 18px; height: 18px; }
+.qt-icon-play { margin-left: 2px; }
+
+.qt-icon-pause, .qt-icon-muted { display: none; }
+.qt-window:not(.is-paused) .qt-icon-play, .qt-window.is-muted .qt-icon-volume { display: none; }
+.qt-window:not(.is-paused) .qt-icon-pause, .qt-window.is-muted .qt-icon-muted { display: block; }
+
+.qt-range {
+	--fill: 0%;
+	--buffer: 0%;
+	--track: linear-gradient(to right, var(--ink) var(--fill), var(--mute) var(--fill), var(--mute) var(--buffer), var(--underline) var(--buffer));
+	-webkit-appearance: none;
+	appearance: none;
+	width: 100%;
+	height: 16px;
+	margin: 0;
+	background: none;
+	cursor: pointer;
+}
+
+.qt-range::-webkit-slider-runnable-track { height: 3px; border-radius: 2px; background: var(--track); }
+.qt-range::-moz-range-track { height: 3px; border-radius: 2px; background: var(--track); }
+
+.qt-range::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 11px;
+	height: 11px;
+	margin-top: -4px;
+	border: 1px solid var(--mute);
+	border-radius: 50%;
+	background: var(--bg);
+}
+
+.qt-range::-moz-range-thumb {
+	width: 9px;
+	height: 9px;
+	border: 1px solid var(--mute);
+	border-radius: 50%;
+	background: var(--bg);
+}
+
+/* the scrubber's playhead is the old player's little downward pointer */
+.qt-seek::-webkit-slider-thumb {
+	width: 11px;
+	height: 9px;
+	margin-top: -8px;
+	border: 0;
+	border-radius: 0;
+	background: var(--ink);
+	clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.qt-seek::-moz-range-thumb {
+	width: 11px;
+	height: 9px;
+	border: 0;
+	border-radius: 0;
+	background: var(--ink);
+	clip-path: polygon(0 0, 100% 0, 50% 100%);
+	transform: translateY(-6px);
+}
+
+.qt-info {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 20px;
+	padding: 10px 14px 12px;
+	border-top: 1px solid var(--underline);
+	background: var(--bg);
+	font-size: var(--small);
+}
+
+.qt-links { flex: none; }
+
+/* the same window around an embedded page instead of a video: no control deck */
+.qt.is-embed { width: min(38rem, 100vw - 2rem); }
+.qt.is-embed .qt-deck, .qt.is-embed video, .qt.is-embed .qt-spinner { display: none; }
+.qt.is-embed .qt-stage { background: #fff; }
+
+.qt-stage iframe {
+	display: block;
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
+
+/* full screen: the picture grows, the deck stays docked under it */
+.qt-window:fullscreen { width: 100vw; height: 100vh; }
+.qt-window:fullscreen .qt-stage { flex: 1; aspect-ratio: auto; max-height: none; min-height: 0; }
+.qt-window:fullscreen .qt-bar, .qt-window:fullscreen .qt-info { display: none; }
+.qt-window:-webkit-full-screen { width: 100vw; height: 100vh; }
+.qt-window:-webkit-full-screen .qt-stage { flex: 1; aspect-ratio: auto; max-height: none; min-height: 0; }
+.qt-window:-webkit-full-screen .qt-bar, .qt-window:-webkit-full-screen .qt-info { display: none; }
+
+@media (max-width: 560px) {
+	.qt-info { flex-direction: column; gap: 4px; }
+	.qt-transport { gap: 5px; }
+}
+
+/* Touch devices set volume with their hardware buttons. */
+@media (hover: none) {
+	.qt-volume .qt-range { display: none; }
+}
+
+/* ---------- rows: experience and contact ---------- */
+
+.rows > * + * { margin-top: 28px; }
+.rows.is-links > * + * { margin-top: 16px; }
+
+.row {
+	display: grid;
+	grid-template-columns: 36px minmax(0, 1fr);
+	column-gap: 14px;
+}
+
+.rows.is-links .row { align-items: center; }
+
+.row-icon {
+	display: grid;
+	place-items: center;
+	width: 36px;
+	height: 36px;
+	border: 1px solid var(--rule);
+	border-radius: 10px;
+	background: var(--card);
+	color: var(--ink);
+	font-weight: 600;
+}
+
+/* logos are transparent, so the tile behind them follows the theme */
+img.row-icon {
+	object-fit: cover;
+	background: #fff;
+}
+
+[data-theme="dark"] img.row-icon { background: var(--card); }
+
+/* about page: a logo is a plain link to the same place as its name */
+.row-link { display: block; }
+
+/* links page: the badge is a link as well, and it and the name light up together */
+a.row-icon {
+	text-decoration: none;
+	transition: background-color .2s, border-color .2s, color .2s, transform .2s cubic-bezier(.2, .8, .2, 1);
+}
+
+.rows.is-links .row:has(a:hover) .row-icon {
+	border-color: var(--ink);
+	background: var(--ink);
+	color: var(--bg);
+}
+
+.rows.is-links .row:has(a:hover) .card-name { text-decoration: underline; }
+a.row-icon:active { transform: scale(.93); }
+
+/* set a touch tight, so role, dates and time served fit on one line */
+.row .when { font-size: var(--small); letter-spacing: -.02em; color: var(--mute); }
+
+/* ---------- footer ---------- */
+
+.site-foot {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 16px;
+	width: min(var(--col), 100% - 2rem);
+	margin: 78px auto 0;
+	padding-bottom: 48px;
+	font-size: var(--small);
+	color: var(--mute);
+}
+
+.site-foot .place {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.leaf { flex: none; color: var(--accent); }
+
+.site-foot .ticker {
+	font-family: var(--mono);
+	font-size: 12px;
+	letter-spacing: -.01em;
+}
+
+/* ---------- page + theme transitions ---------- */
+
+/* Arriving on a page: the nav stays put while each block of the page rises
+   into place, one after the other. */
+.page > *, .site-foot { animation: rise-in .55s cubic-bezier(.2, .8, .2, 1) backwards; }
+.page > :nth-child(2) { animation-delay: 70ms; }
+.page > :nth-child(3) { animation-delay: 140ms; }
+.page > :nth-child(4) { animation-delay: 210ms; }
+.site-foot { animation-delay: 260ms; }
+
+/* rows (experience, contact) and cards follow, each a beat behind the last */
+.row, .card > * {
+	animation: rise-in .6s cubic-bezier(.2, .8, .2, 1) backwards;
+	animation-delay: calc(var(--i, 0) * 65ms + 160ms);
+}
+
+.row:nth-child(2), .shelf .card:nth-child(2) { --i: 1; }
+.row:nth-child(3), .shelf .card:nth-child(3) { --i: 2; }
+.row:nth-child(4), .shelf .card:nth-child(4) { --i: 3; }
+.row:nth-child(5), .shelf .card:nth-child(5) { --i: 4; }
+
+@keyframes rise-in { from { opacity: 0; transform: translateY(14px); } }
+
+/* A fresh load waits at the first frame of all that until the page is ready
+   to play it smoothly (theme-init.js lets go). */
+.is-loading .page > *, .is-loading .site-foot,
+.is-loading .row, .is-loading .card > * { animation-play-state: paused; }
+
+/* Leaving for another tab: the whole page slips out first (run from site.js). */
+.is-leaving .page, .is-leaving .site-foot { animation: page-out .14s ease-in both; }
+@keyframes page-out { to { opacity: 0; transform: translateY(-6px); } }
+
+/* While the theme flips, every colour on the page cross-fades together. */
+.theme-fading,
+.theme-fading *,
+.theme-fading *::before,
+.theme-fading *::after {
+	transition: background-color .3s ease, color .3s ease, border-color .3s ease,
+		stroke .3s ease, fill .3s ease, box-shadow .3s ease, text-decoration-color .3s ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.page > *, .site-foot, .row, .card > *,
+	.is-leaving .page, .is-leaving .site-foot { animation: none; }
+
+	.shelf-btn, .shelf-btn svg, a.row-icon, .dex-card { transition: none; }
+
+	.squiggle path,
+	.site-nav.is-ready a[aria-current="page"] .squiggle path,
+	.theme-toggle svg,
+	.window { transition: none; }
+
+	.name:hover .squiggle path,
+	.qt[open]::backdrop, .qt.is-closing::backdrop { animation: none; }
+	.qt-stage video { transition: none; }
+}

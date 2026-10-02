@@ -1,391 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<meta name="description" content="Muhammad Ahmed, software engineer. C++, graphics, and low-level systems.">
+	<meta name="color-scheme" content="light dark">
+	<meta name="theme-color" content="#fafaf9">
 	<title>Muhammad Ahmed</title>
-	
-	<!-- Favicon -->
-	<link rel="icon" type="image/png" href="./assets/favicon.png">
-	<link rel="shortcut icon" href="./assets/favicon.png">
-	<link rel="apple-touch-icon" href="./assets/favicon.png">
-	
-	<!-- External Dependencies -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	
-	<!-- Main Stylesheet -->
-	<link rel="stylesheet" href="./css/main.css">
+
+	<link rel="icon" type="image/png" href="/assets/favicon.png">
+	<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
+	<script src="/js/theme-init.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&family=Fragment+Mono&display=swap">
+	<link rel="stylesheet" href="/css/site.css">
+	<link rel="stylesheet" href="/css/game.css">
+	<link rel="preload" as="image" href="/assets/hero.jpg">
+
+	<script type="module" src="/js/hero.js"></script>
+	<script type="module" src="/js/sketches.js"></script>
+	<script type="module" src="/js/game.js"></script>
+	<script type="module" src="/js/dex.js"></script>
+	<script type="module" src="/js/site.js"></script>
+	<link rel="modulepreload" href="/js/projects.js">
+	<link rel="modulepreload" href="/js/player.js">
 </head>
 <body>
-	<!-- Loader -->
-	<div class="loader" id="loader">
-		<div class="loader-content">
-			<div class="loader-logo"><img src="./assets/favicon.png" alt="Logo"></div>
-		</div>
-	</div>
+	<header>
+		<nav class="site-nav" id="site-nav" aria-label="Pages">
+			<a href="/" aria-current="page">Index</a>
+			<a href="/about/">About</a>
+			<a href="/work/">Work</a>
+			<a href="/links/">Links</a>
+		</nav>
+		<button class="theme-toggle" type="button" aria-label="Switch theme" data-theme-toggle>
+			<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5Z" fill="currentColor"/></svg>
+		</button>
+	</header>
 
-	<!-- Sound Control Button -->
-	<div class="sound-control" id="soundControl">
-		<div class="sound-icon">
-			<div class="sound-bars">
-				<div class="sound-bar"></div>
-				<div class="sound-bar"></div>
-				<div class="sound-bar"></div>
-				<div class="sound-bar"></div>
+	<main class="page">
+		<section class="wide hero-art">
+			<div class="art" data-art role="img" aria-label="Ink illustration of Reshiram and Zekrom, the white and black dragons from Pokémon Black and White, facing each other through swirling clouds. Hover or touch it and the ink swells and ripples around the pointer.">
+				<img src="/assets/hero.jpg" alt="" width="1380" height="690">
+				<canvas aria-hidden="true"></canvas>
 			</div>
-		</div>
-	</div>
-
-	<!-- Music Notification -->
-	<div class="music-notification" id="musicNotification">
-		<div class="notification-content">
-			<div class="notification-avatar"><img src="./assets/reshiram-dj.png" alt="Music Assistant"></div>
-			<div class="notification-text-content">
-				<p class="notification-title">Sound On?</p>
-				<p class="notification-text">A little music makes scrolling better. Click to play.</p>
-			</div>
-		</div>
-	</div>
-
-	<!-- Fullscreen Video Overlay -->
-	<div class="fullscreen-overlay" id="fullscreenOverlay">
-		<div class="fullscreen-video-container">
-			<video class="fullscreen-video" id="fullscreenVideo" playsinline webkit-playsinline></video>
-			
-			<!-- Custom Video Controls -->
-			<div class="custom-video-controls" id="customVideoControls">
-				<!-- Top controls -->
-				<div class="video-header">
-					<button class="video-back-btn" title="Back">
-						<i class="fas fa-arrow-left"></i>
-					</button>
-					<div class="video-title">Project Demo</div>
-				</div>
-				
-				<!-- Center play/pause -->
-				<div class="video-center-controls">
-					<button class="center-play-btn" id="centerPlayBtn">
-						<i class="fas fa-play"></i>
-					</button>
-				</div>
-				
-				<!-- Bottom controls -->
-				<div class="video-bottom-controls">
-					<div class="video-progress-container">
-						<div class="video-progress-track" id="progressTrack">
-							<div class="video-progress-buffer"></div>
-							<div class="video-progress-played" id="progressPlayed"></div>
-							<div class="video-progress-handle" id="progressHandle"></div>
-						</div>
-					</div>
-					
-					<div class="video-control-row">
-						<div class="video-time">
-							<span id="currentTime">0:00</span> / <span id="totalTime">0:00</span>
-						</div>
-						
-						<div class="video-actions">
-							<button class="video-action-btn restart-btn" title="Restart">
-								<i class="fas fa-redo"></i>
-							</button>
-							<button class="video-action-btn speed-btn" title="Speed" id="speedBtn">
-								1x
-							</button>
-							<button class="video-action-btn mute-btn" title="Mute/Unmute" id="muteBtn">
-								<i class="fas fa-volume-up"></i>
-							</button>
-							<button class="video-action-btn fullscreen-exit-btn" title="Exit">
-								<i class="fas fa-compress"></i>
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Navigation -->
-	<nav id="navbar">
-		<div class="nav-container">
-			<div class="logo"><img src="./assets/favicon.png" alt="Logo"></div>
-			<ul class="nav-links">
-				<li><a href="#home"><i class="fas fa-home"></i><span class="nav-text">Home</span></a></li>
-				<li><a href="#about"><i class="fas fa-user"></i><span class="nav-text">About</span></a></li>
-				<li><a href="#experience"><i class="fas fa-briefcase"></i><span class="nav-text">Experience</span></a></li>
-				<li><a href="#projects"><i class="fas fa-code"></i><span class="nav-text">Projects</span></a></li>
-				<li><a href="#contact"><i class="fas fa-envelope"></i><span class="nav-text">Contact</span></a></li>
-			</ul>
-		</div>
-	</nav>
-
-	<!-- Hero Section -->
-	<section class="hero" id="home">
-		<div class="hero-overlay"></div>
-		<div id="mew-wrapper">
-			<img id="mew-floater" src="https://img.pokemondb.net/sprites/black-white/anim/normal/darkrai.gif" />
-		</div>
-		<div class="particles" id="particles"></div>
-		<div class="hero-content">
-			<h1 data-text="Muhammad Ahmed">Muhammad Ahmed</h1>
-			<p class="subtitle">
-				<span class="mu-options">
-					<span>Software Engineer</span>
-				</span>
-			</p>
-			<p class="fun-intro">
-				Software engineer by hobby. Love to build things, sometimes games, sometimes apps, always something that means something.
-			</p>
-			<div class="hero-buttons">
-				<a href="#projects" class="btn btn-primary">View Projects</a>
-				<a href="/resume" class="btn btn-secondary">
-					<i class="fas fa-file-lines" aria-hidden="true"></i>
-					Resume
+			<p class="art-caption">
+				art:
+				<a class="icon-link" href="https://www.instagram.com/fatdaifuku" aria-label="fatdaifuku on Instagram" target="_blank" rel="noopener">
+					<svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z" fill="currentColor"/></svg>
+					fatdaifuku
 				</a>
-				<a href="https://github.com/mahmedmo" target="_blank" class="btn btn-secondary">
-					<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-						<path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-					</svg>
-					GitHub
-				</a>
-			</div>
-		</div>
-	</section>
+			</p>
+		</section>
 
-	<!-- About Section -->
-	<section class="about" id="about">
-		<div class="container">
-			<h2 class="section-title fade-in">About <span>Me</span></h2>
-			<div class="about-content fade-in">
-				<div class="about-text">
-					<p>
-						I've been writing code since I got curious about how the Pokemon games I played on my Nintendo DS actually worked. That curiosity never really went away, it just evolved into building things that solve real problems (or sometimes just things that are fun to make).
-					</p>
-					<p>
-						These days, I run a home server where I host projects I'm working on. One that took off was a bot I built for a game I play called BriarBot. Started as a personal tool, but other players caught wind of it and now it's got a small community using it. I've also been replacing streaming subscriptions with my own movie and music apps for friends and family, partly to save money, partly because I wanted to see if I could build something better.
-					</p>
-					<p>
-						I'm that person who dual-boots Arch Linux (btw) with a custom Hyprland setup and spent way too much time building my own shell just to interact with my OS exactly how I want to. It's probably overkill, but that's the fun part, taking something further than it needs to go because the challenge is worth it.
-					</p>
-					<p>
-						Currently, I'm learning OpenGL to build a game engine in C++. It's ambitious and definitely difficult, but I like tackling architectural problems that make me think differently. Whether it's designing a shared memory caching system for work or figuring out how to render a triangle from scratch, I'm here for it.
-					</p>
-					<div class="skills-grid">
-						<div class="skill-category">
-							<h3>Languages</h3>
-							<div class="skill-tags">
-								<span class="skill-tag">C++</span>
-								<span class="skill-tag">C#</span>
-								<span class="skill-tag">C</span>
-								<span class="skill-tag">Python</span>
-								<span class="skill-tag">Java</span>
-								<span class="skill-tag">JavaScript</span>
-								<span class="skill-tag">TypeScript</span>
-								<span class="skill-tag">HTML/CSS</span>
-								<span class="skill-tag">SQL</span>
-							</div>
+		<section class="prose">
+			<p>
+				Hey, I'm <span class="name">Muhammad</span>, a software engineer finishing my degree at the
+				University of Calgary. I love where software development meets the hobbies that give me creative
+				freedom.
+			</p>
+			<p>
+				I recently interned at <a href="https://www.seisware.com" target="_blank" rel="noopener">SeisWare</a>, where I built a cross-process shared
+				memory cache in C++ that cut memory overhead by <em>87%</em> across an eight-application suite.
+				I also optimized a graphics shader, cutting render times by <em>28%</em>.
+			</p>
+			<p>
+				Above depict <em class="dex" data-dex="reshiram">Reshiram</em> and
+				<em class="dex" data-dex="zekrom">Zekrom</em>, the legendary dragons from Pokémon Black &amp; White. I grew up
+				playing the game, and I wanted to make an adventure similar to it myself. That got me into computer
+				science in elementary school, where I made my
+				<a href="https://scratch.mit.edu/projects/263657747" data-embed="first-game" target="_blank" rel="noopener">first game</a> with Scratch. In high school, I moved to
+				JavaScript and made browser games and a
+				<a href="/work/" data-demo="reccify">music discovery app</a>. University is where I started exploring engines like Godot and
+				Unity, and looking under the hood is where my interest in
+				<em>graphics programming</em> piqued.
+			</p>
+			<p>
+				A few interactive models of algorithms I've learned in my journey are illustrated below.
+			</p>
+		</section>
+
+		<section>
+			<div class="shelf" data-shelf>
+				<div class="shelf-track" role="region" aria-label="Algorithms I keep coming back to" tabindex="0">
+					<figure class="card">
+						<div class="card-face is-sketch" role="group" aria-label="A Hilbert curve filling a square. Click it and every point unfolds into four, one order higher.">
+							<canvas class="face" data-sketch="hilbert" aria-hidden="true"></canvas>
+							<p class="card-note">
+								<math><msub><mi>L</mi><mi>n</mi></msub><mo>=</mo><msup><mn>2</mn><mi>n</mi></msup><mo>−</mo><msup><mn>2</mn><mrow><mo>−</mo><mi>n</mi></mrow></msup></math>
+								<span class="readout" data-readout aria-live="off"></span>
+							</p>
 						</div>
-						<div class="skill-category">
-							<h3>APIs & Frameworks</h3>
-							<div class="skill-tags">
-								<span class="skill-tag">Qt</span>
-								<span class="skill-tag">OpenGL</span>
-								<span class="skill-tag">.NET</span>
-								<span class="skill-tag">Unity</span>
-								<span class="skill-tag">React</span>
-								<span class="skill-tag">Angular</span>
-								<span class="skill-tag">Spring Boot</span>
-								<span class="skill-tag">Flask</span>
-								<span class="skill-tag">Node.js</span>
-							</div>
+						<figcaption class="card-cap">
+							<span class="card-name">Hilbert Curve</span>
+							<span class="card-desc">1891</span>
+						</figcaption>
+					</figure>
+					<figure class="card">
+						<div class="card-face is-sketch" role="group" aria-label="A cubic Bézier curve being built by repeated linear interpolation between its four control points. Drag a control point to reshape it.">
+							<canvas class="face" data-sketch="casteljau" aria-hidden="true"></canvas>
+							<p class="card-note">
+								<math><msubsup><mi>P</mi><mi>i</mi><mi>k</mi></msubsup><mo>=</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>t</mi><mo stretchy="false">)</mo><mspace width="0.1em"/><msubsup><mi>P</mi><mi>i</mi><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msubsup><mo>+</mo><mi>t</mi><mspace width="0.1em"/><msubsup><mi>P</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msubsup></math>
+								<span class="readout" data-readout aria-live="off"></span>
+							</p>
 						</div>
-						<div class="skill-category">
-							<h3>Tools & Platforms</h3>
-							<div class="skill-tags">
-								<span class="skill-tag">Linux</span>
-								<span class="skill-tag">Docker</span>
-								<span class="skill-tag">Git</span>
-								<span class="skill-tag">Maven</span>
-								<span class="skill-tag">JUnit</span>
-								<span class="skill-tag">Jira</span>
-								<span class="skill-tag">PostgreSQL</span>
-								<span class="skill-tag">MySQL</span>
-								<span class="skill-tag">Redis</span>
-								<span class="skill-tag">Azure</span>
-								<span class="skill-tag">Render</span>
-								<span class="skill-tag">Firebase</span>
-							</div>
+						<figcaption class="card-cap">
+							<span class="card-name">De Casteljau’s Algorithm</span>
+							<span class="card-desc">1959</span>
+						</figcaption>
+					</figure>
+					<figure class="card">
+						<div class="card-face is-sketch" role="group" aria-label="A straight line drawn on a pixel grid using only integer steps, its far end wandering so every slope gets drawn.">
+							<canvas class="face" data-sketch="bresenham" aria-hidden="true"></canvas>
+							<p class="card-note">
+								<math><mi>D</mi><mo>=</mo><mn>2</mn><mi mathvariant="normal">Δ</mi><mi>y</mi><mo>−</mo><mi mathvariant="normal">Δ</mi><mi>x</mi></math>
+								<span class="readout" data-readout aria-live="off"></span>
+							</p>
 						</div>
-					</div>
+						<figcaption class="card-cap">
+							<span class="card-name">Bresenham’s Line</span>
+							<span class="card-desc">1962</span>
+						</figcaption>
+					</figure>
+					<figure class="card">
+						<div class="card-face is-sketch" role="group" aria-label="Drifting points in a square that splits into four wherever a cell holds more than one.">
+							<canvas class="face" data-sketch="quadtree" aria-hidden="true"></canvas>
+							<p class="card-note">
+								<math><mi>d</mi><mo>≈</mo><msub><mi>log</mi><mn>4</mn></msub><mspace width="0.16em"/><mi>n</mi></math>
+								<span class="readout" data-readout aria-live="off"></span>
+							</p>
+						</div>
+						<figcaption class="card-cap">
+							<span class="card-name">Quadtree</span>
+							<span class="card-desc">Finkel &amp; Bentley, 1974</span>
+						</figcaption>
+					</figure>
+					<figure class="card">
+						<div class="card-face is-sketch" role="group" aria-label="Conway’s Game of Life running on a small wrapped grid.">
+							<canvas class="face" data-sketch="life" aria-hidden="true"></canvas>
+							<p class="card-note">
+								<math><msup><mi>x</mi><mo>′</mo></msup><mo>=</mo><mo stretchy="false">[</mo><mi>N</mi><mo>=</mo><mn>3</mn><mo stretchy="false">]</mo><mo>∨</mo><mo stretchy="false">(</mo><mi>x</mi><mo>∧</mo><mo stretchy="false">[</mo><mi>N</mi><mo>=</mo><mn>2</mn><mo stretchy="false">]</mo><mo stretchy="false">)</mo></math>
+								<span class="readout" data-readout aria-live="off"></span>
+							</p>
+						</div>
+						<figcaption class="card-cap">
+							<span class="card-name">Game of Life</span>
+							<span class="card-desc">Conway, 1970</span>
+						</figcaption>
+					</figure>
 				</div>
 			</div>
-		</div>
-	</section>
+		</section>
+	</main>
 
-	<!-- Experience Section -->
-	<section class="experience" id="experience">
-		<div class="section-separator"></div>
-		<div class="container">
-			<h2 class="section-title fade-in">My <span>Experience</span></h2>
-			<div class="timeline">
-				<!-- Future: Graduation -->
-				<div class="timeline-item">
-					<div class="timeline-dot graduation-dot">
-						<span class="timeline-label">FUTURE</span>
-					</div>
-					<div class="timeline-content">
-						<div class="timeline-date">
-							April 2027
-						</div>
-						<h3>🎓 Graduation</h3>
-						<h4>Bachelor's Degree</h4>
-						<p>
-							Expected completion of my undergraduate studies in Software Engineering at the University of Calgary.
-						</p>
-					</div>
-				</div>
-
-				<!-- Present/Current: SeisWare Intern -->
-				<div class="timeline-item">
-					<div class="timeline-dot current-dot">
-						<span class="timeline-label">PRESENT</span>
-					</div>
-					<div class="timeline-content">
-						<div class="timeline-date">
-							May 2025 - May 2026
-						</div>
-						<h3>Software Developer Intern</h3>
-						<h4>SeisWare International Inc.</h4>
-						<p>
-							Developing enterprise Qt desktop applications in C++ and C#, contributing to feature development, bug fixes, and architecture decisions in Agile sprints. Built a cross-process shared memory caching system that reduced memory overhead by 87%.
-						</p>
-					</div>
-				</div>
-
-				<!-- Past: Stratus -->
-				<div class="timeline-item">
-					<div class="timeline-dot"></div>
-					<div class="timeline-content">
-						<div class="timeline-date">
-							May 2024 - August 2024
-						</div>
-						<h3>Full-Stack Developer Intern</h3>
-						<h4>Stratus</h4>
-						<p>
-							Built a web-based data management application using Angular and a C# .NET backend. Focused on UI/UX, data visualization, and RESTful API integration.
-						</p>
-					</div>
-				</div>
-
-				<!-- Past: Code Ninjas -->
-				<div class="timeline-item">
-					<div class="timeline-dot"></div>
-					<div class="timeline-content">
-						<div class="timeline-date">
-							June 2022 - Present
-						</div>
-						<h3>Senior Coding Instructor</h3>
-						<h4>Code Ninjas</h4>
-						<p>
-							Instructing 150+ students (ages 7–14) in coding fundamentals, OOP, debugging, and Unity game engine. Teaching technical Unity C# classes covering design patterns, algorithms, and data structures.
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- Projects Section -->
-	<section class="projects" id="projects">
-		<div class="section-separator"></div>
-		<div class="container">
-			<h2 class="section-title fade-in">
-				Featured <span>Projects</span>
-			</h2>
-			<div class="projects-container">
-				<div class="projects-grid" id="projectsGrid">
-					<!-- Projects will be dynamically generated from config/projects.js -->
-				</div>
-				<button class="view-more-btn" id="viewMoreBtn">
-					<span>View More</span>
-					<svg class="arrow-icon" id="viewMoreIcon" viewBox="0 0 24 24">
-						<path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-					</svg>
-				</button>
-				<!-- Mobile Projects Carousel -->
-				<div class="mobile-projects">
-					<div class="mobile-project-viewport">
-						<div class="mobile-projects-track" id="mobileProjectsTrack">
-							<!-- Projects will be cloned here via JavaScript -->
-						</div>
-					</div>
-					<!-- Mobile Indicators -->
-					<div class="mobile-project-indicators" id="mobileIndicators">
-						<!-- Indicators will be generated via JavaScript -->
-					</div>
-					<!-- Swipe Indicator -->
-					<div class="swipe-indicator" id="swipeIndicator">
-						<span class="swipe-text">Swipe</span>
-						<div class="swipe-hand">
-							<span class="hand-icon">👆</span>
-						</div>
-					</div>
-				</div>
-		</div>
-	</section>
-
-	<!-- Contact Section -->
-	<section class="contact" id="contact">
-		<div class="section-separator"></div>
-		<div class="container">
-			<h2 class="section-title fade-in">
-				Let's <span>Connect</span>
-			</h2>
-			<div class="contact-content fade-in">
-				<p class="contact-message">
-					I'm always excited to collaborate on innovative projects
-					and explore new opportunities. Whether you have a
-					question, an idea, or just want to say hello, I'd love
-					to hear from you.
-				</p>
-				<div class="contact-info">
-					<a href="https://www.linkedin.com/in/muhammad-ahmed8/" class="contact-item" target="_blank">
-						<i class="fab fa-linkedin"></i>
-						<span>LinkedIn</span>
-					</a>
-				</div>
-			</div>
-			<div class="mini-footer">
-				<a href="https://muhammad-ahmed.dev">muhammad-ahmed.dev</a>
-			</div>
-		</div>
-	</section>
-
-	<!-- Floating Menu -->
-	<nav class="floating-menu" id="floatingMenu">
-		<a href="#home" class="menu-item active" data-section="home">
-			<i class="fas fa-home"></i>
-			<span>Home</span>
-		</a>
-		<a href="#about" class="menu-item" data-section="about">
-			<i class="fas fa-user"></i>
-			<span>About</span>
-		</a>
-		<a href="#experience" class="menu-item" data-section="experience">
-			<i class="fas fa-briefcase"></i>
-			<span>Experience</span>
-		</a>
-		<a href="#projects" class="menu-item" data-section="projects">
-			<i class="fas fa-code"></i>
-			<span>Projects</span>
-		</a>
-		<a href="#contact" class="menu-item" data-section="contact">
-			<i class="fas fa-envelope"></i>
-			<span>Contact</span>
-		</a>
-	</nav>
-
-
-	<!-- Main Application Script -->
-	<script type="module" src="./js/main.js"></script>
+	<footer class="site-foot">
+		<span class="place">Calgary, Alberta, Canada <svg class="leaf" width="13" height="13" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.8 L13.5 5 L15.4 4 L14.8 9 L17.4 6.6 L18 8.2 L20.6 7.8 L19.6 10.8 L21 11.6 L16.4 15.4 L17 17.2 L12.7 16.6 L12.7 21.6 L11.3 21.6 L11.3 16.6 L7 17.2 L7.6 15.4 L3 11.6 L4.4 10.8 L3.4 7.8 L6 8.2 L6.6 6.6 L9.2 9 L8.6 4 L10.5 5Z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>
+		<span class="ticker" id="clock" title="Local time in Calgary"></span>
+	</footer>
 </body>
 </html>
