@@ -8,6 +8,10 @@
 	}
 	root.dataset.theme = theme;
 
+	// The tab icon follows the theme: Reshiram in light, Zekrom in dark.
+	var icon = document.getElementById('favicon');
+	if (icon) icon.href = '/assets/favicon-' + theme + '.png';
+
 	// A fresh load or refresh holds the page's entrance (see "is-loading" in
 	// site.css) until the scripts have run, the fonts are in and the hero has
 	// drawn its first frame, so it plays in full at the same unhurried pace as

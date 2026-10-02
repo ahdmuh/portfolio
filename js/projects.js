@@ -2,7 +2,8 @@
  * Projects, in the order they appear on the site: latest first.
  *
  * To add one, drop its video in assets/demos/ and a poster frame in
- * assets/posters/ (same name, "-poster.jpg"), then add an entry here.
+ * assets/posters/ (same name, "-poster.jpg", plus a 640x360 "-thumb.jpg" for
+ * the card), then add an entry here.
  * `blurb` is the one-liner beside the title; `about` is shown in the player.
  * Every name in `tech` needs a logo in TECH_ICONS (files are in assets/icons/).
  */
