@@ -7,8 +7,15 @@ const canHover = matchMedia('(hover: hover) and (pointer: fine)');
 
 /* ---------- theme ---------- */
 
+// the page backgrounds, as in site.css: also set inline, ahead of the stylesheet (see the page head)
+const PAGE_BG = { light: '#fafaf9', dark: '#0b0b0b' };
+
 function applyTheme(theme) {
 	root.dataset.theme = theme;
+	root.style.colorScheme = theme;
+	root.style.backgroundColor = PAGE_BG[theme];
+	const scheme = document.querySelector('meta[name="color-scheme"]');
+	if (scheme) scheme.content = theme;
 	const next = theme === 'dark' ? 'light' : 'dark';
 	document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
 		btn.setAttribute('aria-label', `Switch to ${next} theme`);
@@ -407,6 +414,16 @@ function initSnake() {
 			card.el.querySelectorAll('button, a').forEach(control => { control.tabIndex = -1; });
 		}
 	});
+
+	// The cards hold their entrance (briefly) until their stills are decoded, so
+	// they arrive whole instead of filling in a moment later.
+	snake.classList.add('is-waiting');
+	const stills = cards.map(card => {
+		const thumb = card.el.querySelector('.thumb');
+		return thumb.decode ? thumb.decode().catch(() => {}) : Promise.resolve();
+	});
+	Promise.race([Promise.all(stills), new Promise(resolve => setTimeout(resolve, 450))])
+		.then(() => requestAnimationFrame(() => snake.classList.remove('is-waiting')));
 
 	let stride = 0;
 	let edge = 0;
