@@ -169,4 +169,5 @@ function init() {
 	document.addEventListener('keydown', event => { if (event.key === 'Escape') hide(); });
 	window.addEventListener('scroll', () => { if (card.classList.contains('is-open') && current) place(current); }, { passive: true });
 	window.addEventListener('resize', hide);
+	window.addEventListener('site:leaving', () => card.classList.remove('is-open'));
 }

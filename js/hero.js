@@ -305,6 +305,12 @@ function init(container) {
 	}).observe(canvas);
 	document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
 	reduceMotion.addEventListener('change', kick);
+	// Coming back to this page by its tab, the ink soaks in again as on a fresh load.
+	window.addEventListener('site:arrived', () => {
+		if (!container.isConnected || !textureReady) return;
+		revealStart = performance.now();
+		kick();
+	});
 	window.addEventListener('themechange', () => {
 		setColours(!reduceMotion.matches);
 		kick();

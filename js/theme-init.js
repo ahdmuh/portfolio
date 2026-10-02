@@ -12,14 +12,12 @@
 	var icon = document.getElementById('favicon');
 	if (icon) icon.href = '/assets/favicon-' + theme + '.png';
 
-	// A fresh load or refresh holds the page's entrance (see "is-loading" in
-	// site.css) until the scripts have run, the fonts are in and the hero has
-	// drawn its first frame, so it plays in full at the same unhurried pace as
-	// arriving from another tab, instead of being cut short by the work of
-	// loading. Never held for long.
-	var byTab = false;
-	try { byTab = sessionStorage.getItem('arrived-by-tab') === '1'; } catch (e) {}
-	if (byTab || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+	// Loading a page holds its entrance (see "is-loading" in site.css) until the
+	// scripts have run, the fonts are in and the hero has drawn its first frame,
+	// so it plays in full at the same unhurried pace as switching tabs (which
+	// swaps pages in place, see site.js), instead of being cut short by the work
+	// of loading. Never held for long.
+	if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
 	root.classList.add('is-loading');
 	var released = false;

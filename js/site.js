@@ -71,59 +71,166 @@ function trackPageWidth() {
 
 /* ---------- moving between pages ---------- */
 
+// The four pages are separate documents, but moving between them never loads
+// a new one. The next page's <main> is fetched (ahead of time, while idle) and
+// swapped in under the same header and footer. With no change of document
+// there is no gap for the browser to paint a blank page into, the tab switch
+// is immediate, and a page left behind keeps its state for when you return.
+// Without script, or if a fetch fails, the links simply work as links.
 const LEAVE_MS = 140;
+const TABS = [...document.querySelectorAll('.site-nav a')].map(a => new URL(a.href).pathname);
+const pages = new Map();       // pathname → promise of { main, title, description, styles, modules, images, started }
+const running = new Set();     // module scripts this document has already run
+let trip = 0;                  // the latest tab switch; an earlier one that finishes late is dropped
 
-// Clicking a link to another page of the site lets the current one slip out
-// first; the next page's own entrance (page-in in the CSS) does the rest.
+function describePage(doc) {
+	const paths = selector => [...doc.querySelectorAll(selector)].map(el => el.getAttribute('href') ?? el.getAttribute('src'));
+	return {
+		main: doc.querySelector('main.page'),
+		title: doc.title,
+		description: doc.querySelector('meta[name="description"]')?.content ?? '',
+		styles: paths('link[rel="stylesheet"][href^="/"]'),
+		modules: paths('script[type="module"][src]'),
+		images: paths('link[rel="preload"][as="image"]'),
+		started: false
+	};
+}
+
+// Fetch a page and keep its <main>, and have the browser fetch what it runs on.
+function loadPage(path) {
+	if (pages.has(path)) return pages.get(path);
+	const page = fetch(path)
+		.then(response => {
+			if (!response.ok) throw new Error(`${path}: ${response.status}`);
+			return response.text();
+		})
+		.then(html => {
+			const found = describePage(new DOMParser().parseFromString(html, 'text/html'));
+			if (!found.main) throw new Error(`${path}: no main`);
+			found.main = document.adoptNode(found.main);
+			for (const href of found.modules) hint('modulepreload', href);
+			for (const href of found.styles) hint('preload', href, 'style');
+			return found;
+		});
+	pages.set(path, page);
+	page.catch(() => pages.delete(path));
+	return page;
+}
+
+function hint(rel, href, as) {
+	if (document.head.querySelector(`link[rel="${rel}"][href="${href}"], link[rel="stylesheet"][href="${href}"], script[src="${href}"]`)) return;
+	const link = document.createElement('link');
+	link.rel = rel;
+	link.href = href;
+	if (as) link.as = as;
+	document.head.append(link);
+}
+
+// A page's own stylesheets have to be in before it is shown.
+function addStyles(hrefs) {
+	return Promise.all(hrefs.map(href => {
+		if (document.head.querySelector(`link[rel="stylesheet"][href="${href}"]`)) return null;
+		return new Promise(resolve => {
+			const link = document.createElement('link');
+			link.rel = 'stylesheet';
+			link.href = href;
+			link.addEventListener('load', resolve, { once: true });
+			link.addEventListener('error', resolve, { once: true });
+			setTimeout(resolve, 1500);
+			document.head.append(link);
+		});
+	}));
+}
+
+// What a page needs done once, the first time it is on screen.
+function startPage(page) {
+	if (page.started) return;
+	page.started = true;
+	initShelves();
+	initDemoLinks();
+	initSnake();
+	for (const src of page.modules) {
+		if (running.has(src)) continue;
+		running.add(src);
+		import(src);
+	}
+}
+
+async function goTo(path, { push = true } = {}) {
+	const id = ++trip;
+	const nav = document.getElementById('site-nav');
+	// The tab highlight moves the instant it is clicked.
+	nav.classList.add('is-switching');
+	nav.querySelector('[aria-current]')?.removeAttribute('aria-current');
+	nav.querySelector(`a[href="${path}"]`)?.setAttribute('aria-current', 'page');
+
+	// The page on screen slips out while the next one is fetched (it usually already
+	// has been). Anything that needs a moment to bow out (the game) says how long.
+	const hold = reduceMotion.matches ? 0 : Math.max(LEAVE_MS, Number(root.dataset.leaveHold) || 0);
+	window.dispatchEvent(new Event('site:leaving'));
+	root.classList.add('is-leaving');
+	let page;
+	try {
+		[page] = await Promise.all([loadPage(path), new Promise(resolve => setTimeout(resolve, hold))]);
+		await addStyles(page.styles);
+	} catch {
+		location.href = path; // the ordinary way
+		return;
+	}
+	if (id !== trip) return;
+
+	document.querySelector('main.page').replaceWith(page.main);
+	document.title = page.title;
+	const description = document.querySelector('meta[name="description"]');
+	if (description) description.content = page.description;
+	if (push) history.pushState(null, '', path);
+	root.classList.remove('is-leaving');
+	startPage(page);
+	requestAnimationFrame(() => nav.classList.remove('is-switching'));
+	window.dispatchEvent(new Event('site:arrived'));
+}
+
 function initPageTransitions() {
+	const here = describePage(document);
+	here.started = true;
+	pages.set(location.pathname, Promise.resolve(here));
+	here.modules.forEach(src => running.add(src));
+
 	document.addEventListener('click', event => {
 		const link = event.target.closest('a[href]');
-		if (!link || event.defaultPrevented || reduceMotion.matches) return;
+		if (!link || event.defaultPrevented) return;
 		if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 		if (link.target && link.target !== '_self') return;
 		const url = new URL(link.href, location.href);
-		const samePage = url.pathname === location.pathname && url.search === location.search;
-		if (url.origin !== location.origin || samePage || link.hasAttribute('download')) return;
-		// The résumé is a PDF viewer, not one of the site's own pages.
-		if (!document.querySelector(`.site-nav a[href="${url.pathname}"]`)) return;
-
+		if (url.origin !== location.origin || link.hasAttribute('download')) return;
+		// only the site's own tabs; the résumé, say, is a PDF viewer
+		if (!TABS.includes(url.pathname)) return;
 		event.preventDefault();
-		// The tab highlight moves the instant it is clicked, and the next page
-		// arrives with it already in place (see initSquiggles).
-		const nav = document.getElementById('site-nav');
-		const tab = nav.querySelector(`a[href="${url.pathname}"]`);
-		nav.classList.add('is-switching');
-		nav.querySelector('[aria-current]')?.removeAttribute('aria-current');
-		tab.setAttribute('aria-current', 'page');
-		// ...and at the same scroll position, so the page doesn't jump back to the top
-		try {
-			sessionStorage.setItem('arrived-by-tab', '1');
-			sessionStorage.setItem('tab-scroll', String(Math.round(window.scrollY)));
-		} catch {}
-		// anything that needs a moment to bow out (the game) says how long, and is told we are going
-		const hold = Math.max(LEAVE_MS, Number(root.dataset.leaveHold) || 0);
-		window.dispatchEvent(new Event('site:leaving'));
-		root.classList.add('is-leaving');
-		setTimeout(() => { location.href = url.href; }, hold);
+		if (url.pathname !== location.pathname) goTo(url.pathname);
 	});
 
-	// Coming back with the back button restores this page as it was left: mid-exit.
-	window.addEventListener('pageshow', () => root.classList.remove('is-leaving'));
-}
+	// back and forward
+	window.addEventListener('popstate', () => {
+		if (TABS.includes(location.pathname)) goTo(location.pathname, { push: false });
+		else location.reload();
+	});
 
-// Arriving from another tab: pick up at the scroll position the last page was left at.
-function restoreTabScroll() {
-	let top = 0;
-	try {
-		top = Number(sessionStorage.getItem('tab-scroll')) || 0;
-		sessionStorage.removeItem('tab-scroll');
-	} catch {}
-	if (!top) return;
-	const restore = () => { if (window.scrollY < top) window.scrollTo(0, top); };
-	restore();
-	// parts of a page settle their height a moment later (the work page's cards, webfonts)
-	requestAnimationFrame(restore);
-	window.addEventListener('load', restore, { once: true });
+	// Once this page has settled, fetch the others so a switch never waits on the network.
+	const warm = () => TABS.forEach(path => loadPage(path).catch(() => {}));
+	if (document.readyState === 'complete') setTimeout(warm, 600);
+	else window.addEventListener('load', () => setTimeout(warm, 600), { once: true });
+
+	// Reaching for a tab fetches that page's pictures too, so they are there on arrival.
+	document.querySelectorAll('.site-nav a').forEach(tab => {
+		const path = new URL(tab.href).pathname;
+		const fetchImages = () => {
+			loadPage(path).then(page => page.images.forEach(href => { new Image().src = href; })).catch(() => {});
+		};
+		for (const type of ['pointerenter', 'focus', 'touchstart']) tab.addEventListener(type, fetchImages, { once: true, passive: true });
+	});
+
+	// Coming back with the back button to a page left mid-exit.
+	window.addEventListener('pageshow', () => root.classList.remove('is-leaving'));
 }
 
 /* ---------- squiggles ---------- */
@@ -161,21 +268,6 @@ function drawSquiggles() {
 function initSquiggles() {
 	const nav = document.getElementById('site-nav');
 	drawSquiggles();
-
-	// Arriving from another tab, the highlight is simply there: no redraw, no flash.
-	let arrived = false;
-	try {
-		arrived = sessionStorage.getItem('arrived-by-tab') === '1';
-		sessionStorage.removeItem('arrived-by-tab');
-	} catch {}
-	if (arrived) {
-		nav?.classList.add('is-ready', 'is-instant');
-		document.fonts?.ready.then(() => {
-			drawSquiggles();
-			requestAnimationFrame(() => nav?.classList.remove('is-instant'));
-		});
-		return;
-	}
 
 	// A first visit draws it in. Link widths shift once the webfont lands, so measure again first.
 	const ready = () => {
@@ -362,14 +454,6 @@ function initDemoLinks() {
 		if (item) player.embed(item, { origin: link });
 		else player.open(project, { src: demoSrc(project.id), poster: posterSrc(project.id), origin: link });
 	}));
-}
-
-// Reaching for the Work tab fetches its card stills, so they are there on arrival.
-function initWorkWarmup() {
-	const tab = document.querySelector('.site-nav a[href="/work/"]');
-	if (!tab || tab.hasAttribute('aria-current')) return;
-	const warm = () => PROJECTS.forEach(project => { new Image().src = thumbSrc(project.id); });
-	for (const type of ['pointerenter', 'focus', 'touchstart']) tab.addEventListener(type, warm, { once: true, passive: true });
 }
 
 /* ---------- work page: the snake ---------- */
@@ -589,7 +673,5 @@ initPageTransitions();
 initSquiggles();
 initShelves();
 initDemoLinks();
-initWorkWarmup();
 initSnake();
 initClock();
-restoreTabScroll();
