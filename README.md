@@ -46,3 +46,7 @@ See [DEVELOPMENT.md](docs/DEVELOPMENT.md).
 ## Contributing
 
 Bug fixes, security patches, and other critical improvements are welcome. Larger changes and feature enhancements will be reviewed individually to ensure they fit the project’s direction. See [CONTRIBUTING.md](.github/CONTRIBUTING.md) before opening a pull request. I’m also a student with limited free time, so reviews may take a while. Thanks for bearing with me.
+
+## Credits
+
+This project benefits from the work of talented artists, including [fatdaifuku](https://www.instagram.com/fatdaifuku) for the hero illustration and [Krishna Palacio](https://www.patreon.com/cw/krishna_palacio) for the sprites in the game. Thank you!
