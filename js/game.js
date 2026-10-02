@@ -1444,7 +1444,8 @@ function init() {
 
 	/* ----- the play button exists only where the game is playable ----- */
 
-	const allowed = () => finePointer.matches && window.innerWidth >= MIN_WIDTH;
+	// (and only on the index page: tabs are swapped in place, so this script outlives it)
+	const allowed = () => finePointer.matches && window.innerWidth >= MIN_WIDTH && location.pathname === '/';
 
 	function mount() {
 		button = element('button', 'game-play', `${ICON_PLAY}${ICON_STOP}<span class="game-play-label" aria-hidden="true">play game</span>`);
@@ -1485,6 +1486,7 @@ function init() {
 	// running it asks the page (see initPageTransitions) to hold on that long.
 	window.addEventListener('site:leaving', () => stop(false, true));
 
+	window.addEventListener('site:arrived', sync);
 	window.addEventListener('resize', sync);
 	finePointer.addEventListener('change', sync);
 	sync();
