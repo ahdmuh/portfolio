@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<meta name="description" content="About Muhammad Ahmed and where he has worked.">
+	<meta name="color-scheme" content="light dark">
+	<meta name="theme-color" content="#fafaf9">
+	<title>About · Muhammad Ahmed</title>
+
+	<link rel="icon" type="image/png" href="/assets/favicon.png">
+	<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
+	<script src="/js/theme-init.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&family=Fragment+Mono&display=swap">
+	<link rel="stylesheet" href="/css/site.css">
+
+	<script type="module" src="/js/site.js"></script>
+	<link rel="modulepreload" href="/js/projects.js">
+	<link rel="modulepreload" href="/js/player.js">
+</head>
+<body>
+	<header>
+		<nav class="site-nav" id="site-nav" aria-label="Pages">
+			<a href="/">Index</a>
+			<a href="/about/" aria-current="page">About</a>
+			<a href="/work/">Work</a>
+			<a href="/links/">Links</a>
+		</nav>
+		<button class="theme-toggle" type="button" aria-label="Switch theme" data-theme-toggle>
+			<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5Z" fill="currentColor"/></svg>
+		</button>
+	</header>
+
+	<main class="page">
+		<section class="prose">
+			<p>
+				C++ is the language I'm most fond of, which naturally puts me lower in the software stack. It's
+				where I worked at <a href="https://www.seisware.com" target="_blank" rel="noopener">SeisWare</a>, building a shared memory cache
+				with a <em>page-table</em> design and process synchronization, so every app in the suite could access data
+				quickly and safely. On the rendering side, I rewrote a <em>fragment shader</em> in the OpenGL
+				pipeline to move work onto the CPU, offloading strain on the GPU.
+			</p>
+			<p>
+				A lot of that work started as a conversation. I ran design meetings there and wrote
+				<em>ADRs</em> to get agreement on the architecture before it was built. I took on a similar role as
+				<em>team lead</em> for six engineers on <a href="/work/" data-demo="wizdomrun">Wizdom Run</a>, a
+				game that later became the subject of a
+				<a href="https://dl.acm.org/doi/10.1145/3803437.3806368" target="_blank" rel="noopener">paper on LLMs in game development</a>
+				I <em>co-authored</em>, published at ACM's FSE 2026.
+			</p>
+			<p>
+				I like sharing what I know, too. Since 2022, I've taught programming to over 150 students at
+				<a href="https://www.codeninjas.com" target="_blank" rel="noopener">Code Ninjas</a>.
+			</p>
+			<p>
+				Right now, my personal goal is set on building a <em>game engine</em> in C++ to learn more about
+				the mechanisms behind modern engine renditions. I'm also in my final year at the
+				<a href="https://www.ucalgary.ca" target="_blank" rel="noopener">University of Calgary</a>, working on my engineering <em>capstone</em>
+				project: a biomedical, game-based solution to help post-stroke patients recover hand dexterity.
+				Looking forward to sharing results from this study soon!
+			</p>
+		</section>
+
+		<section aria-labelledby="experience">
+			<p class="label" id="experience">Experience</p>
+			<div class="rows">
+				<article class="row">
+					<a class="row-link" href="https://www.seisware.com" tabindex="-1" aria-hidden="true" target="_blank" rel="noopener"><img class="row-icon" src="/assets/logos/seisware.png" alt="" width="36" height="36" loading="lazy"></a>
+					<div>
+						<p><a class="card-name" href="https://www.seisware.com" target="_blank" rel="noopener">SeisWare</a> <span class="when">· Software Developer Intern · 2025–26 · 1y</span></p>
+						<p>Enterprise C++ and Qt codebase, Agile feature development and bug fixes.</p>
+					</div>
+				</article>
+				<article class="row">
+					<a class="row-link" href="https://www.stratusneuro.com/" tabindex="-1" aria-hidden="true" target="_blank" rel="noopener"><img class="row-icon" src="/assets/logos/stratus.png" alt="" width="36" height="36" loading="lazy"></a>
+					<div>
+						<p><a class="card-name" href="https://www.stratusneuro.com/" target="_blank" rel="noopener">Stratus Neuro</a> <span class="when">· Software Developer Intern · 2024 · 4mo</span></p>
+						<p>Full-stack development across a C# .NET backend, databases, and Angular front ends.</p>
+					</div>
+				</article>
+				<article class="row">
+					<a class="row-link" href="https://www.codeninjas.com" tabindex="-1" aria-hidden="true" target="_blank" rel="noopener"><img class="row-icon" src="/assets/logos/codeninjas.png" alt="" width="36" height="36" loading="lazy"></a>
+					<div>
+						<p><a class="card-name" href="https://www.codeninjas.com" target="_blank" rel="noopener">Code Ninjas</a> <span class="when">· Senior Coding Instructor · 2022–now · ~5y</span></p>
+						<p>Teaching students programming fundamentals, from block coding to JavaScript and Unity C#.</p>
+					</div>
+				</article>
+				<article class="row">
+					<a class="row-link" href="https://www.ucalgary.ca" tabindex="-1" aria-hidden="true" target="_blank" rel="noopener"><img class="row-icon" src="/assets/logos/ucalgary.png" alt="" width="36" height="36" loading="lazy"></a>
+					<div>
+						<p><a class="card-name" href="https://www.ucalgary.ca" target="_blank" rel="noopener">University of Calgary</a> <span class="when">· BSc Software Engineering</span></p>
+						<p>Dean's List, expected to graduate in May 2027.</p>
+					</div>
+				</article>
+			</div>
+		</section>
+	</main>
+
+	<footer class="site-foot">
+		<span class="place">Calgary, Alberta, Canada <svg class="leaf" width="13" height="13" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.8 L13.5 5 L15.4 4 L14.8 9 L17.4 6.6 L18 8.2 L20.6 7.8 L19.6 10.8 L21 11.6 L16.4 15.4 L17 17.2 L12.7 16.6 L12.7 21.6 L11.3 21.6 L11.3 16.6 L7 17.2 L7.6 15.4 L3 11.6 L4.4 10.8 L3.4 7.8 L6 8.2 L6.6 6.6 L9.2 9 L8.6 4 L10.5 5Z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>
+		<span class="ticker" id="clock" title="Local time in Calgary"></span>
+	</footer>
+</body>
+</html>

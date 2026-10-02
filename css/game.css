@@ -1,0 +1,181 @@
+/* Index-page mini game (js/game.js builds all of this markup, on desktop only). */
+
+/* play / quit: mirrors the theme toggle in the opposite corner, and stays in
+   view as the page scrolls */
+.game-play {
+	position: fixed;
+	top: 37px;
+	left: max(20px, env(safe-area-inset-left));
+	z-index: 60;
+	display: grid;
+	place-items: center;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	border: 0;
+	border-radius: 8px;
+	background: none;
+	color: var(--mute);
+	cursor: pointer;
+	/* arrives with the rest of the page, and fades back if the page is restored mid-exit */
+	animation: game-in .5s ease .2s backwards;
+	transition: opacity .3s;
+}
+
+@keyframes game-in { from { opacity: 0; } }
+
+.game-play:hover { color: var(--ink); }
+
+/* "play game", beside the icon until the game's own text takes that spot */
+.game-play-label {
+	position: absolute;
+	left: calc(100% + 8px);
+	top: 0;
+	font-size: 12px;
+	line-height: 28px;
+	white-space: nowrap;
+	/* waits for the game's own text to fade out of that spot before coming back */
+	transition: opacity .25s .25s;
+}
+
+.game-play.has-hud .game-play-label {
+	opacity: 0;
+	pointer-events: none;
+	transition-delay: 0s;
+}
+
+.game-play.is-playing { color: var(--ink); }
+
+.game-icon-stop,
+.game-play.is-playing .game-icon-play { display: none; }
+.game-play.is-playing .game-icon-stop { display: block; }
+
+/* leaving for another tab: the game's corner goes out with the page */
+.is-leaving .game-play,
+.is-leaving .game-hud,
+.is-leaving .game-credit,
+.is-leaving .game-note {
+	opacity: 0;
+	transition: opacity .14s ease-in;
+}
+
+/* hints, then the running time and any active buffs, beside the button */
+.game-hud {
+	position: absolute;
+	top: 37px;
+	left: calc(max(20px, env(safe-area-inset-left)) + 36px);
+	z-index: 60;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0;
+	font-size: 12px;
+	line-height: 28px;
+	color: var(--mute);
+	white-space: nowrap;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity .3s;
+}
+
+.game-hud.is-playing { position: fixed; }
+.game-hud.is-visible { opacity: 1; transition-delay: .2s; }
+
+.game-hud.is-time .game-hud-text {
+	font-family: var(--mono);
+	letter-spacing: -.01em;
+}
+
+/* who drew the sprites: a small note under the play button, there only
+   while a game is on */
+.game-credit {
+	position: absolute;
+	top: 63px;
+	/* lined up with the left edge of the play icon */
+	left: calc(max(20px, env(safe-area-inset-left)) + 10px);
+	z-index: 60;
+	margin: 0;
+	font-size: 11px;
+	line-height: 16px;
+	color: var(--mute);
+	white-space: nowrap;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity .25s;
+}
+
+/* pinned to the screen for the game, and for the moment it takes to fade afterwards */
+.game-credit.is-fixed { position: fixed; }
+
+.game-credit.is-playing {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+/* the line's text fades out and back in whenever it changes to something else */
+.game-hud-text { transition: opacity .18s ease; }
+.game-hud-text.is-out { opacity: 0; }
+
+/* "sound off" / "sound on": a brief note under the credit */
+.game-note {
+	position: fixed;
+	top: 81px;
+	left: calc(max(20px, env(safe-area-inset-left)) + 10px);
+	z-index: 60;
+	margin: 0;
+	font-size: 11px;
+	line-height: 16px;
+	color: var(--mute);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity .25s;
+}
+
+.game-note.is-visible { opacity: 1; }
+
+/* a buff is a short bar that drains from the right */
+.game-pip {
+	width: 28px;
+	height: 3px;
+	border-radius: 2px;
+	background: linear-gradient(currentColor, currentColor) left / calc(var(--left, 0) * 100%) 100% no-repeat,
+		color-mix(in oklab, currentColor 22%, transparent);
+}
+
+.game-pip.is-spring { color: var(--accent); }
+.game-pip.is-shield { color: #3f9be6; }
+
+/* the nav needs that space on narrower screens; the text moves above the button */
+@media (max-width: 1000px) {
+	.game-hud {
+		top: 10px;
+		left: max(26px, env(safe-area-inset-left));
+		line-height: 20px;
+	}
+}
+
+/* everything the game draws sits on one layer over the page; it fades in and
+   out as a whole, and clicks and scrolls fall through to the page */
+.game-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 50;
+	opacity: 0;
+	pointer-events: none;
+	image-rendering: pixelated;
+	transition: opacity .3s;
+}
+
+.game-canvas.is-on { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+	.game-play { animation: none; transition: none; }
+
+	.game-hud,
+	.game-hud-text,
+	.game-note,
+	.game-play-label,
+	.game-credit,
+	.game-canvas { transition: none; }
+}
