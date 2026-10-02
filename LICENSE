@@ -1,0 +1,22 @@
+Copyright (c) 2025-2026 Muhammad Ahmed. All rights reserved.
+
+This repository is the source for my personal site, https://ahdmuh.me. It is
+public so the site can be hosted and the code can be read. No permission is
+granted to copy, modify, redistribute, or reuse any part of it, in whole or in
+part, without my prior written permission.
+
+Third-party material in this repository is not mine to license. It remains
+the property of its owners and is subject to their terms:
+
+- The hero illustration (assets/hero.jpg) is by fatdaifuku
+  (https://www.instagram.com/fatdaifuku).
+- The sprite sheet (assets/game/slime.png) is adapted from "Minifantasy -
+  Creatures" by Krishna Palacio (https://www.patreon.com/cw/krishna_palacio),
+  used under its free license for non-commercial use. That license does not
+  permit redistributing the assets.
+- The tool icons (assets/icons/) are from Simple Icons
+  (https://simpleicons.org), released under CC0 1.0.
+- The company and university logos (assets/logos/) are trademarks of their
+  respective owners.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
