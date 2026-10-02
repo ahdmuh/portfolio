@@ -16,7 +16,7 @@ My personal portfolio, made to highlight my projects, hobbies and career.
 
 ## About
 
-This is the source code for my portfolio site, [ahdmuh.me](https://ahdmuh.me). There's also a small game and a few fun easter eggs in there :)
+This is the source code for my portfolio site, [ahdmuh.me](https://ahdmuh.me). There's also a small game and a few fun easter eggs scattered about :)
 
 ## Credits
 
