@@ -433,6 +433,7 @@ const EMBEDS = {
 		src: 'https://scratch.mit.edu/projects/263657747/embed',
 		page: 'https://scratch.mit.edu/projects/263657747',
 		linkText: 'scratch',
+		icon: 'scratch',
 		width: 485,
 		height: 402
 	}
