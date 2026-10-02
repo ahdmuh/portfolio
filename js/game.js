@@ -60,7 +60,7 @@ const SHIELD_BLUE = '#3f9be6'; // the shield gel, and the bubble it puts round t
 const SHIELD_SHINE = '#d3e9fb';
 const GOLD = '#e3b341';
 const ICON_PATREON = '<svg width="10" height="10" viewBox="0 0 24 24" aria-hidden="true"><path d="M22.957 7.21c-.004-3.064-2.391-5.576-5.191-6.482-3.478-1.125-8.064-.962-11.384.604C2.357 3.231 1.093 7.391 1.046 11.54c-.039 3.411.302 12.396 5.369 12.46 3.765.047 4.326-4.804 6.068-7.141 1.24-1.662 2.836-2.132 4.801-2.618 3.376-.836 5.678-3.501 5.673-7.031Z" fill="currentColor"/></svg>';
-const CREDIT = `sprite assets by <a class="icon-link is-lined" href="https://www.patreon.com/krishna_palacio" target="_blank" rel="noopener">${ICON_PATREON}Krishna Palacio</a>`;
+const CREDIT = `sprite assets by <a class="icon-link is-lined" href="https://www.patreon.com/cw/krishna_palacio" target="_blank" rel="noopener">${ICON_PATREON}Krishna Palacio</a>`;
 
 /* ---------- pixel art ---------- */
 

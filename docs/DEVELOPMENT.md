@@ -69,6 +69,6 @@ GitHub Pages serves the root of `main`, so pushing to `main` publishes the site.
 These are not mine, and their terms limit what the repository can be used for:
 
 - The hero illustration is by [fatdaifuku](https://www.instagram.com/fatdaifuku).
-- The slime sprite sheet is recoloured from *Minifantasy - Creatures* by [Krishna Palacio](https://www.patreon.com/krishna_palacio). It is the free version, which allows non-commercial use with credit and does not allow redistributing the assets.
+- The slime sprite sheet is recoloured from *Minifantasy - Creatures* by [Krishna Palacio](https://www.patreon.com/cw/krishna_palacio). It is the free version, which allows non-commercial use with credit and does not allow redistributing the assets.
 - Tool icons are from [Simple Icons](https://simpleicons.org) (CC0).
 - Pokémon sprites and type badges are loaded from [Pokémon Database](https://pokemondb.net) and the [PokéAPI sprite collection](https://github.com/PokeAPI/sprites) at runtime and are not stored here.
