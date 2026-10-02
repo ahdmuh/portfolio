@@ -711,7 +711,8 @@ header { position: relative; }
 	position: relative;
 	display: block;
 	aspect-ratio: 16 / 9;
-	background: color-mix(in srgb, var(--ink) 7%, var(--card));
+	/* the same grey as the window around it: an empty screen is not a visible block */
+	background: var(--card);
 }
 
 .screen .thumb, .screen video {
@@ -725,6 +726,10 @@ header { position: relative; }
 }
 
 .screen .thumb.is-loaded, .has-frames .screen video { opacity: 1; }
+
+/* On arrival the cards wait for their stills (initSnake), which then show at once. */
+.snake.is-waiting .card > * { animation-play-state: paused; }
+.snake.is-waiting .thumb { transition: none; }
 
 .play-chip {
 	position: absolute;

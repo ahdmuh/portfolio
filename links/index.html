@@ -5,6 +5,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 	<meta name="description" content="Where to find Muhammad Ahmed: email, GitHub, LinkedIn and résumé.">
 	<meta name="color-scheme" content="light dark">
+	<!-- Before anything loads: pick the theme and give the page its own background,
+	     so a switch between pages never shows the browser's blank page colour. -->
+	<script>(function(){var t;try{t=localStorage.getItem('theme')}catch(e){}if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var r=document.documentElement;r.dataset.theme=t;r.style.colorScheme=t;r.style.backgroundColor=t==='dark'?'#0b0b0b':'#fafaf9';document.querySelector('meta[name="color-scheme"]').content=t;})();</script>
 	<meta name="theme-color" content="#fafaf9">
 	<title>Links · Muhammad Ahmed</title>
 
