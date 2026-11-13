@@ -6,6 +6,7 @@
  * the card), then add an entry here.
  * `blurb` is the one-liner beside the title; `about` is shown in the player.
  * Every name in `tech` needs a logo in TECH_ICONS (files are in assets/icons/).
+ * `code` is the public repository; leave it out for a private one (the card then links to `site`).
  */
 
 export const PROJECTS = [
@@ -16,7 +17,6 @@ export const PROJECTS = [
 		about: 'A local model I fine-tuned for conversation, teaching and everyday agentic work. In blind comparisons against open models in the same memory class, judges preferred her explanations and conversations over every other.',
 		tech: ['Python', 'Docker'],
 		length: '0:22',
-		code: 'https://github.com/ahdmuh/selena',
 		site: '/selena/'
 	},
 	{
