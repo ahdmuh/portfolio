@@ -287,7 +287,7 @@ export function createPlayer() {
 			$('[data-title]').textContent = project.title;
 			$('[data-about]').textContent = project.about;
 			$('[data-links]').innerHTML = [
-				`<a class="icon-link is-lined" href="${project.code}" target="_blank" rel="noopener">${ICONS.github}code</a>`,
+				project.code ? `<a class="icon-link is-lined" href="${project.code}" target="_blank" rel="noopener">${ICONS.github}code</a>` : '',
 				project.site ? `<a href="${project.site}" target="_blank" rel="noopener">site</a>` : ''
 			].filter(Boolean).join(' · ');
 			dialog.setAttribute('aria-label', `${project.title} demo`);

@@ -353,7 +353,7 @@ function cardHTML(project) {
 				<span class="card-note">${tech}</span>
 			</button>
 			<figcaption class="card-cap">
-				<a class="card-name" href="${project.code}" target="_blank" rel="noopener">${project.title}</a>
+				<a class="card-name" href="${project.code || project.site}" target="_blank" rel="noopener">${project.title}</a>
 				<span class="card-desc">${project.blurb}</span>
 			</figcaption>
 		</figure>`;
