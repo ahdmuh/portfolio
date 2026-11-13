@@ -229,7 +229,7 @@ figure.chart { margin: 48px 0 0; width: 100%; max-width: 920px; }
 
   <div class="col">
     <h2 id="availability">Availability</h2>
-    <p>Selena runs in her own harness, built for voice calls, messages and threads.</p>
+    <p>Selena runs in her own harness, built for voice calls, messages and threads. The model and its code are private for now.</p>
   </div>
 
   <section class="notes" aria-labelledby="fn">
@@ -242,6 +242,7 @@ figure.chart { margin: 48px 0 0; width: 100%; max-width: 920px; }
       <li>Evaluations prefixed SEL- are our own (SEL-Explain, SEL-Dialogue, SEL-Format, SEL-Unknowns, SEL-Tasks, SEL-Unseen, SEL-LectureQA, SEL-Persona); the rest are public benchmarks. The internal evaluations were written after Selena's training data was frozen and were never trained on. Release decisions were made on a separate held-out test set.</li>
       <li>SEL-Persona is in-domain for Selena: every model was given her character description, which she was trained on.</li>
       <li>Prompt-injection probes are our own test set, separate from AgentDojo: 512 samples with instructions planted in search results, emails, web pages and files.</li>
+      <li>Selena was fine-tuned and evaluated on a single NVIDIA GeForce RTX 5090.</li>
     </ol>
   </section>
 </article>

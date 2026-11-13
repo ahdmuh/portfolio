@@ -13,7 +13,7 @@ export const PROJECTS = [
 	{
 		id: 'selena',
 		title: 'Selena',
-		blurb: 'a local model with her own personality',
+		blurb: 'a local model that teaches and talks',
 		about: 'A local model I fine-tuned for conversation, teaching and everyday agentic work. In blind comparisons against open models in the same memory class, judges preferred her explanations and conversations over every other.',
 		tech: ['Python', 'Docker'],
 		length: '0:22',
