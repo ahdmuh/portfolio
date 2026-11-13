@@ -89,9 +89,9 @@ h1 img { width: clamp(220px, 34vw, 430px); height: auto; display: block; }
 @media (max-width: 1100px) { .side { display: none; } }
 
 /* article */
-article { padding: 96px 16px max(120px, 62svh); display: grid; justify-items: center; }
+article { padding: 96px 16px max(120px, 62svh); display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; }
 .col { width: 100%; max-width: 720px; }
-.wide { width: 100%; max-width: 1180px; margin: 48px 0 0; }
+.wide { width: 100%; max-width: 1180px; margin: 48px 0 0; min-width: 0; }
 .summary { font: 400 28px/36px var(--serif); margin: 0 0 48px; }
 .col p { margin: 0; }
 .col p + p { margin-top: 24px; }
@@ -131,6 +131,7 @@ figure.chart { margin: 48px 0 0; width: 100%; max-width: 920px; }
 .legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 16px; font: 400 13px/1.4 var(--sans); }
 .legend li { display: flex; align-items: center; gap: 8px; }
 .legend svg { width: 14px; height: 14px; }
+.plot { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .plot svg { width: 100%; height: auto; display: block; overflow: visible; }
 .plot text { font-family: var(--sans); fill: var(--ink); }
 .plot .tick { fill: var(--muted); font-size: 12px; }
@@ -151,11 +152,18 @@ figure.chart { margin: 48px 0 0; width: 100%; max-width: 920px; }
 .notes ol { margin: 0; padding-left: 1.2em; display: grid; gap: 10px; }
 
 @media (max-width: 720px) {
+  .contents { margin-top: 48px; }
+  .hero .stage { padding: 56px 0 24px; }
+  article { padding-top: 64px; }
   .summary { font-size: 22px; line-height: 30px; }
   h2 { font-size: 25px; }
   .grid { --label: 148px; }
   table.bench { min-width: 900px; }
   .panel { padding: 16px; }
+  .plot svg { min-width: 700px; }
+  .plot .tick { font-size: 15px; }
+  .plot .val { font-size: 16px; }
+  .plot .lab { font-size: 15px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 </style>
