@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Selena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+/* Launch-post layout: a dark full-height hero (date, typeset name, numbered contents), then an ivory article with a
+   720px reading column, one ruled benchmark grid with Selena's column edged in crimson, framed charts, and footnotes.
+   Single light theme with a dark hero, as on a launch post. */
+:root {
+  --ivory: #faf9f5;
+  --ink: #141413;
+  --muted: #5e5d59;
+  --grid: #d1cfc5;
+  --night: #0f0f0e;
+  --night-ink: #faf9f5;
+  --crimson: #b3263e;
+  --rose: #ebc8cd;
+  --rose-soft: #f3e0e2;
+  --rival: #e8e6dc;
+  --sans: "Figtree", "Helvetica Neue", Arial, sans-serif;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; overscroll-behavior: none; background: var(--night); }
+html, body { margin: 0; color: var(--ink); overscroll-behavior: none; }
+body { background: var(--ivory); }
+body { font: 400 17px/1.53 var(--serif); font-feature-settings: "pnum" on, "lnum" on; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-underline-offset: .18em; }
+::selection { background: color-mix(in srgb, var(--crimson) 25%, transparent); }
+
+/* hero */
+.hero { background: var(--night); color: var(--night-ink); min-height: 100svh; display: grid; padding: 0 16px; position: relative; overflow: hidden; isolation: isolate; }
+.hero-grid { width: min(100%, 1280px); margin: 0 auto; min-height: 100svh; display: flex; align-items: center; justify-content: center; gap: clamp(40px, 6vw, 96px); position: relative; }
+.hero .stage { padding: 96px 0; position: relative; z-index: 1; width: clamp(280px, 34vw, 440px); flex: none; grid-template-columns: minmax(0, 1fr); }
+.selena { position: relative; order: -1; flex: none; height: min(76svh, 800px); aspect-ratio: 614 / 1451; }
+.figure { position: absolute; inset: 0; transform-origin: 50% 100%; }
+/* shadow generated from her own silhouette: contact shadows along each sole + her silhouette projected onto the floor */
+.shadow { position: absolute; z-index: -1; left: -52.117%; top: 0; width: 204.23%; height: auto; pointer-events: none; }
+/* background ambience: slow drifting glows in her palette, compositor-only transforms */
+.ambience { position: absolute; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+.ambience i { position: absolute; border-radius: 50%; will-change: transform; }
+.ambience .a1 { width: 62vmax; height: 62vmax; left: calc(50% - 263px - 31vmax); top: calc(50% - 31vmax); background: radial-gradient(closest-side, rgba(179,38,62,.30), rgba(179,38,62,.10) 52%, transparent 74%); animation: breathe-glow 14s ease-in-out infinite alternate, drift1 52s ease-in-out infinite alternate; }
+.ambience .a2 { width: 66vmax; height: 66vmax; right: -26vmax; bottom: -34vmax; background: radial-gradient(closest-side, rgba(104,16,34,.40), rgba(104,16,34,.12) 50%, transparent 72%); animation: drift2 64s ease-in-out infinite alternate; }
+.ambience .a3 { width: 58vmax; height: 30vmax; right: -6vmax; top: -16vmax; background: radial-gradient(closest-side, rgba(236,232,242,.045), transparent 70%); animation: drift3 76s ease-in-out infinite alternate; }
+.ambience::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 34% 44% at 50% 47%, rgba(15,15,14,.78), transparent 100%); }
+@keyframes breathe-glow { from { opacity: .75; } to { opacity: 1; } }
+@keyframes drift1 { to { transform: translate3d(4vmax, 3vmax, 0) scale(1.08); } }
+@keyframes drift2 { to { transform: translate3d(-14vmax, -7vmax, 0) scale(.92); } }
+@keyframes drift3 { to { transform: translate3d(-18vmax, 6vmax, 0) scale(1.15); } }
+@media (prefers-reduced-motion: reduce) { .ambience i { animation: none; } }
+.figure img { position: absolute; left: 0; top: 0; width: 100%; height: auto; display: block; user-select: none; -webkit-user-drag: none; }
+@media (max-width: 1180px) {
+  .hero-grid { min-height: 0; padding: 24px 0 40px; flex-direction: column; gap: 8px; }
+  .hero .stage { padding: 72px 0 32px; }
+  .selena { order: 1; height: min(60svh, 560px); }
+}
+
+.stage { display: grid; justify-items: center; gap: 0; width: min(100%, 1280px); }
+.eyebrow { font: 500 14px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; margin: 0 0 40px; }
+h1 { margin: 0; line-height: 0; }
+h1 img { width: clamp(220px, 34vw, 430px); height: auto; display: block; }
+.contents { width: min(100%, 360px); margin-top: clamp(84px, 14svh, 170px); }
+.toc { list-style: none; margin: 0; padding: 0; font: 400 15px/1 var(--serif); }
+.toc a { display: flex; align-items: baseline; gap: 2px; padding: 6.5px 0; text-decoration: none; color: inherit; transition: opacity .2s; }
+.toc:has(a:hover, a:focus-visible) a:not(:hover, :focus-visible) { opacity: .5; }
+.toc a:focus-visible { outline: 2px solid; outline-offset: 3px; border-radius: 2px; }
+.toc .num { font: 400 13px/1 var(--mono); }
+.toc .dots { flex: 1 1 0; min-width: 16px; margin: 0 4px; overflow: hidden; white-space: nowrap; letter-spacing: 1px; }
+.toc .dots::before { content: "................................................................................................................................"; }
+
+/* side contents */
+.side { position: fixed; left: 0; top: 50%; transform: translateY(-50%); z-index: 30; opacity: 0; pointer-events: none; transition: opacity .3s; }
+.side.on { opacity: 1; pointer-events: auto; }
+.side ol { list-style: none; margin: 0; padding: 0 0 0 20px; }
+.side a { display: flex; align-items: center; width: 44px; height: 20px; position: relative; text-decoration: none; }
+.side a::before { content: ""; width: 16px; height: 1px; background: var(--muted); opacity: .6; transition: width .25s, opacity .25s, background .25s; }
+.side a.active::before { width: 24px; opacity: 1; background: var(--ink); }
+.side a:hover::before { opacity: 1; }
+.side .pill { position: absolute; left: 34px; top: 50%; transform: translate(-4px, -50%); opacity: 0; pointer-events: none; white-space: nowrap;
+  background: var(--ink); color: var(--ivory); border-radius: 999px; padding: 3px 12px; font: 400 12px/1.5 var(--sans); transition: opacity .18s, transform .18s; }
+.side a:hover .pill, .side a:focus-visible .pill { opacity: 1; transform: translate(0, -50%); }
+@media (max-width: 1100px) { .side { display: none; } }
+
+/* article */
+article { padding: 96px 16px max(120px, 62svh); display: grid; justify-items: center; }
+.col { width: 100%; max-width: 720px; }
+.wide { width: 100%; max-width: 1180px; margin: 48px 0 0; }
+.summary { font: 400 28px/36px var(--serif); margin: 0 0 48px; }
+.col p { margin: 0; }
+.col p + p { margin-top: 24px; }
+strong { font-weight: 600; }
+h2 { font: 500 32px/1.2 var(--serif); margin: 56px 0 24px; text-wrap: pretty; scroll-margin-top: 48px; }
+.anchor { display: block; scroll-margin-top: 48px; }
+
+/* benchmark grid */
+.grid { --label: 240px; overflow-x: auto; }
+table.bench { font: 400 14px/1.4 var(--sans); font-feature-settings: "pnum" on, "lnum" on; border-collapse: separate; border-spacing: 0; table-layout: fixed; width: 100%; min-width: 1020px; color: var(--ink); }
+.bench th, .bench td { border-bottom: 1px solid var(--ink); border-left: 1px solid var(--ink); text-align: left; vertical-align: top; height: 72px; padding: 10px 12px; font-weight: 400; }
+.bench thead th { border-top: 1px solid var(--ink); height: 46px; white-space: nowrap; vertical-align: baseline; font-weight: 600; background: var(--ivory); }
+.bench tr > :last-child { border-right: 1px solid var(--ink); }
+.bench .corner, .bench .label { width: var(--label); position: sticky; left: 0; background: var(--ivory); z-index: 3; }
+.bench .cat { display: block; font-weight: 600; }
+.bench thead .arch { display: block; margin-top: 2px; font: 400 12px/1.3 var(--sans); letter-spacing: .02em; color: var(--muted); }
+.bench .name { display: block; color: var(--muted); margin-top: 4px; line-height: 1.25; }
+.bench .v { display: block; white-space: nowrap; }
+.bench .b { font-weight: 600; }
+.bench .q { display: block; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.bench .subject { position: relative; }
+.bench .subject::after { content: ""; position: absolute; inset: -1px; border-left: 3px solid var(--crimson); border-right: 3px solid var(--crimson); pointer-events: none; }
+.bench thead .subject { box-shadow: inset 0 2px 0 var(--crimson); border-top-color: var(--crimson); }
+.bench tbody tr:last-child .subject { box-shadow: inset 0 -2px 0 var(--crimson); border-bottom-color: var(--crimson); }
+.bench .subject + * { border-left: none; }
+.bench .win-ours { background: var(--rose); }
+.bench .win-sibling { background: var(--rose-soft); }
+.bench .win-rival { background: var(--rival); }
+.cap { font: 400 14px/1.4 var(--sans); color: var(--muted); text-align: center; text-wrap: balance; margin: 24px auto 0; max-width: 900px; }
+
+/* charts */
+figure.chart { margin: 48px 0 0; width: 100%; max-width: 920px; }
+.panel { border: 1px solid var(--ink); background: var(--ivory); padding: 24px; }
+.chart-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px 16px; flex-wrap: wrap; margin-bottom: 24px; font-family: var(--sans); }
+.chart-title { font: 600 17px/1.4 var(--sans); display: block; }
+.chart-sub { font: 400 15px/1.4 var(--sans); color: var(--muted); display: block; }
+.legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 16px; font: 400 13px/1.4 var(--sans); }
+.legend li { display: flex; align-items: center; gap: 8px; }
+.legend svg { width: 14px; height: 14px; }
+.plot svg { width: 100%; height: auto; display: block; overflow: visible; }
+.plot text { font-family: var(--sans); fill: var(--ink); }
+.plot .tick { fill: var(--muted); font-size: 12px; }
+.plot .val { font-size: 13px; }
+.plot .lab { font-size: 12.5px; }
+.plot .bold { font-weight: 600; }
+
+/* call to action */
+.cta { margin-top: 32px !important; }
+.button { display: inline-flex; align-items: center; gap: 10px; background: var(--ink); color: var(--ivory); text-decoration: none; font: 500 15px/1 var(--sans);
+  padding: 14px 22px; border-radius: 8px; transition: background .2s; }
+.button:hover { background: #3d3d3a; }
+.button:focus-visible { outline: 2px solid var(--crimson); outline-offset: 3px; }
+
+/* footnotes */
+.notes { width: 100%; max-width: 720px; margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--grid); font: 400 13px/1.54 var(--sans); letter-spacing: .01em; color: var(--muted); }
+.notes h2 { font: 500 17px/1.3 var(--serif); color: var(--ink); margin: 0 0 16px; }
+.notes ol { margin: 0; padding-left: 1.2em; display: grid; gap: 10px; }
+
+@media (max-width: 720px) {
+  .summary { font-size: 22px; line-height: 30px; }
+  h2 { font-size: 25px; }
+  .grid { --label: 148px; }
+  table.bench { min-width: 900px; }
+  .panel { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<section class="hero" aria-labelledby="title">
+  <div class="ambience" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
+  <div class="hero-grid">
+  <div class="stage">
+    <p class="eyebrow"><time datetime="2026-11-12">November 12, 2026</time></p>
+    <h1 id="title"><img src="img/selena.png" alt="Selena" width="1026" height="318"></h1>
+    <nav class="contents" aria-label="Contents">
+      <ol class="toc">
+        <li><a href="#introduction"><span class="num" aria-hidden="true">[1]</span><span class="dots" aria-hidden="true"></span><span>Introduction</span></a></li>
+        <li><a href="#evaluations"><span class="num" aria-hidden="true">[2]</span><span class="dots" aria-hidden="true"></span><span>Performance</span></a></li>
+        <li><a href="#conversation"><span class="num" aria-hidden="true">[3]</span><span class="dots" aria-hidden="true"></span><span>Conversation</span></a></li>
+        <li><a href="#honesty"><span class="num" aria-hidden="true">[4]</span><span class="dots" aria-hidden="true"></span><span>Honesty and Safety</span></a></li>
+        <li><a href="#availability"><span class="num" aria-hidden="true">[5]</span><span class="dots" aria-hidden="true"></span><span>Availability</span></a></li>
+      </ol>
+    </nav>
+  </div>
+  <div class="selena" id="selena" role="img" aria-label="Selena: long white hair, red eyes, a black academy robe lined in crimson, arms crossed">
+    <div class="figure">
+      <img id="selenaImg" src="sprite/selena-base.webp" alt="" width="614" height="1451" fetchpriority="high">
+    </div>
+    <img class="shadow" src="sprite/selena-shadow.webp" alt="" width="1254" height="1481" aria-hidden="true">
+  </div>
+  </div>
+</section>
+
+<nav class="side" id="side" aria-label="On this page">
+  <ol>
+    <li><a href="#introduction"><span class="pill">Introduction</span></a></li>
+    <li><a href="#evaluations"><span class="pill">Performance</span></a></li>
+    <li><a href="#conversation"><span class="pill">Conversation</span></a></li>
+    <li><a href="#honesty"><span class="pill">Honesty and Safety</span></a></li>
+    <li><a href="#availability"><span class="pill">Availability</span></a></li>
+  </ol>
+</nav>
+
+<article>
+  <div class="col">
+    <span class="anchor" id="introduction"></span>
+    <p class="summary">Introducing Selena, a local model built for conversation, teaching and everyday agentic work.</p>
+    <p>In blind comparisons, judges preferred Selena's explanations over every other model we tested, by a wide margin, and she led the field in multi-turn conversation. She fits each reply to where it will be read, structured in a thread and brief in a text, and she knows when a question calls for a tool or a search.</p>
+    <p>Selena is a 26-billion-parameter mixture-of-experts model that activates about 4 billion parameters per token. She runs entirely on local hardware, with the latency real-time voice conversation needs.</p>
+    <p>She is also trained to be honest about what she doesn't know. Asked about prices, the news or a document she can't see, she checks or says so. In our own injection tests, she followed none of the 512 instructions planted in the web pages, emails and files she read.</p>
+
+    <h2 id="evaluations">Performance</h2>
+    <p><strong>Benchmarks.</strong> The table below compares Selena with leading open models that run within the same memory budget, on public benchmarks and on our own evaluations of the work she does every day: teaching, conversation, messaging and tool use.</p>
+  </div>
+
+  <figure class="wide">
+    <div class="grid" role="region" aria-label="Benchmark table" tabindex="0"><table class="bench" id="bench"></table></div>
+  </figure>
+
+  <div class="col">
+    <h2 id="conversation">Conversation</h2>
+    <p>We asked each model to explain concepts and lecture slides to a learner, then had blind judges compare every pair of answers. Selena won about seven in ten of those matchups, against dense models with several times her active parameters and against a dedicated reasoning model.</p>
+    <p>Her lead held in longer conversations. Across scripted multi-turn chats in which the user follows up, pushes back and changes topic, judges preferred Selena's transcripts more often than any other model's.</p>
+  </div>
+  <figure class="chart" id="chartExplain"></figure>
+
+  <div class="col">
+    <h2 id="honesty">Honesty and Safety</h2>
+    <p><strong>Knowing What She Doesn't Know.</strong> On questions that can't be answered without live data or a document she hasn't been shown, Selena checked with a tool or said she couldn't know, every time.</p>
+    <p><strong>Prompt Injection.</strong> Selena reads the open web, inboxes and files on the user's behalf. Across 512 of our own probes with instructions planted in that content, she followed none of them.</p>
+    <p><strong>Where Other Models Lead.</strong> Broad knowledge, factual recall, retrieval across a full 128,000-token document and resistance to AgentDojo's multi-step attacks still favor larger and reasoning-focused models. Every result is reported in full in the table above.</p>
+  </div>
+
+  <div class="col">
+    <h2 id="availability">Availability</h2>
+    <p>Selena runs in her own harness, built for voice calls, messages and threads. The harness lives in the Selena repository.</p>
+    <p class="cta"><a class="button" href="https://github.com/ahdmuh/selena" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>View on GitHub</a></p>
+  </div>
+
+  <section class="notes" aria-labelledby="fn">
+    <h2 id="fn">Footnotes</h2>
+    <ol>
+      <li>All models ran on the same llama.cpp build at 128k context with an 8-bit KV cache, through their own chat templates, with thinking off where the model has the switch. Muse Glimmer ran at its lowest reasoning setting with 2,048 extra tokens on short-answer suites. Every model ran at a quantization whose memory use at 128k context is within 3% of Selena's (20.5 to 21.5 GB), so every comparison is within the same memory class.</li>
+      <li>MoE marks mixture-of-experts models, which run only a fraction of their weights for each token; dense models run all of them. At the same memory footprint, MoE models answer several times faster.</li>
+      <li>Exact-answer suites use greedy decoding; open-ended suites use temperature 0.7 and top-p 0.95, with replies capped at 1,200 tokens. All models received the same neutral system prompt and tool schemas.</li>
+      <li>SEL-Explain, SEL-Dialogue, SEL-Format, SEL-Persona, SEL-Unknowns, SEL-LectureQA and SimpleQA were graded by blind AI judges with model names hidden and answer order randomized. Win rates count ties as half and move when models are added to or removed from the comparison. All seven models were graded in a single round under one rubric, and a second judge re-graded a sample of every suite.</li>
+      <li>Evaluations prefixed SEL- are our own (SEL-Explain, SEL-Dialogue, SEL-Format, SEL-Unknowns, SEL-Tasks, SEL-Unseen, SEL-LectureQA, SEL-Persona); the rest are public benchmarks. The internal evaluations were written after Selena's training data was frozen and were never trained on. Release decisions were made on a separate held-out test set.</li>
+      <li>SEL-Persona is in-domain for Selena: every model was given her character description, which she was trained on.</li>
+      <li>Prompt-injection probes are our own test set, separate from AgentDojo: 512 samples with instructions planted in search results, emails, web pages and files.</li>
+    </ol>
+  </section>
+</article>
+
+<script>
+// Selena: one pose, one expression; she blinks at natural intervals.
+(function blink() {
+  const img = document.getElementById("selenaImg");
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const F = { open: "sprite/selena-base.webp", half: "sprite/selena-blink_half.webp", shut: "sprite/selena-blink_closed.webp" };
+  Object.values(F).forEach(u => { const i = new Image(); i.src = u; });
+  let t = 0, on = true;
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  async function once(double) {
+    img.src = F.half; await wait(55); img.src = F.shut; await wait(85); img.src = F.half; await wait(55); img.src = F.open;
+    if (double) { await wait(160); await once(false); }
+  }
+  function next() { t = setTimeout(async () => { if (on) await once(Math.random() < 0.18); next(); }, 2600 + Math.random() * 3400); }
+  next();
+  document.addEventListener("visibilitychange", () => { on = !document.hidden; });
+})();
+
+const MODELS = [
+  { id: "q5", name: "Selena", arch: "MoE", subject: true },
+  { id: "mero", name: "MeroMero", arch: "MoE" },
+  { id: "g431", name: "Gemma 4 31B", arch: "Dense" },
+  { id: "g4moe", name: "Gemma 4 26B", arch: "MoE" },
+  { id: "q38", name: "Qwen 3.8 27B", arch: "Dense" },
+  { id: "q36", name: "Qwen 3.6 35B", arch: "MoE" },
+  { id: "muse", name: "Muse Glimmer", arch: "Dense" },
+];
+const DATA = {"q5": {"explain": 70.62, "sim": 77.08, "thread": 88.75, "persona": 62.67, "unk": 100.0, "bfcl": 87.62, "home": 91.5, "unseen": 95.0, "adojo": [82.5, "15.0% hijacked"], "ifeval": 86.88, "lecture": 96.67, "mmlu": 63.71, "bbh": 93.89, "math": 94.8, "ruler": 76.88, "sqa": 7.5}, "mero": {"explain": 56.25, "sim": 51.39, "thread": 64.58, "persona": 41.78, "unk": 91.25, "bfcl": 86.91, "home": 90.0, "unseen": 90.0, "adojo": [87.5, "11.2% hijacked"], "ifeval": 89.46, "lecture": 96.67, "mmlu": 63.93, "bbh": 93.52, "math": 96.0, "ruler": 76.88, "sqa": 7.0}, "g431": {"explain": 49.38, "sim": 43.75, "thread": 64.17, "persona": 52.44, "unk": 95.0, "bfcl": 90.95, "home": 89.5, "unseen": 93.33, "adojo": [90.0, "26.2% hijacked"], "ifeval": 92.05, "lecture": 96.67, "mmlu": 69.93, "bbh": 93.52, "math": 95.2, "ruler": 93.75, "sqa": 8.5}, "g4moe": {"explain": 48.12, "sim": 62.5, "thread": 66.67, "persona": 50.22, "unk": 97.5, "bfcl": 86.43, "home": 89.5, "unseen": 93.33, "adojo": [82.5, "25.0% hijacked"], "ifeval": 90.39, "lecture": 96.67, "mmlu": 65.07, "bbh": 93.89, "math": 96.0, "ruler": 75.62, "sqa": 7.75}, "q38": {"explain": 42.71, "sim": 27.78, "thread": 47.08, "persona": 42.67, "unk": 96.25, "bfcl": 87.86, "home": 90.5, "unseen": 100.0, "adojo": [95.0, "6.2% hijacked"], "ifeval": 83.18, "lecture": 93.33, "mmlu": 62.07, "bbh": 92.04, "math": 95.2, "ruler": 93.75, "sqa": 7.5}, "q36": {"explain": 27.29, "sim": 15.28, "thread": 62.08, "persona": 44.0, "unk": 95.0, "bfcl": 91.43, "home": 92.5, "unseen": 100.0, "adojo": [88.75, "15.0% hijacked"], "ifeval": 84.29, "lecture": 98.33, "mmlu": 61.14, "bbh": 92.04, "math": 95.6, "ruler": 93.75, "sqa": 18.75}, "muse": {"explain": 55.62, "sim": 72.22, "thread": 57.92, "persona": 55.11, "unk": 92.5, "bfcl": 68.57, "home": 82.0, "unseen": 100.0, "adojo": [93.75, "7.5% hijacked"], "ifeval": 90.57, "lecture": 100.0, "mmlu": 81.21, "bbh": 81.48, "math": 88.4, "ruler": 73.75, "sqa": 11.25}};
+const ROWS = [
+  ["Teaching", "SEL-Explain", "%", "explain"],
+  ["Conversation", "SEL-Dialogue", "%", "sim"],
+  ["Formatting", "SEL-Format", "", "thread"],
+  ["Honesty", "SEL-Unknowns", "%", "unk"],
+  ["Instruction Following", "IFEval", "%", "ifeval"],
+  ["Agentic Tasks", "SEL-Tasks", "%", "home"],
+  ["Function Calling", "BFCL v4", "%", "bfcl"],
+  ["Unfamiliar Tools", "SEL-Unseen", "%", "unseen"],
+  ["Prompt Injection", "AgentDojo", "%", "adojo"],
+  ["Document Understanding", "SEL-LectureQA", "%", "lecture"],
+  ["Character Consistency", "SEL-Persona", "", "persona"],
+  ["Knowledge", "MMLU-Pro", "%", "mmlu"],
+  ["Reasoning", "BIG-Bench Hard", "%", "bbh"],
+  ["Mathematics", "MATH-500", "%", "math"],
+  ["Long-Context Retrieval", "RULER 128K", "%", "ruler"],
+  ["Factual Recall", "SimpleQA", "%", "sqa"],
+];
+const val = (m, k) => { const v = DATA[m][k]; return Array.isArray(v) ? v : [v, null]; };
+const fmt = (n, u) => (Math.abs(n - Math.round(n)) < 1e-9 ? String(Math.round(n)) : n.toFixed(1)) + u;
+
+(function table() {
+  const T = document.getElementById("bench");
+  let h = `<thead><tr><th class="corner"></th>` + MODELS.map(m => `<th class="${m.subject ? "subject" : ""}">${m.name}<span class="arch">${m.arch}</span></th>`).join("") + `</tr></thead><tbody>`;
+  for (const [cat, name, u, k] of ROWS) {
+    const nums = MODELS.map(m => +fmt(val(m.id, k)[0], ""));
+    const best = Math.max(...nums);
+    const ours = nums[0] === best, sib = nums[1] === best;
+    h += `<tr><th class="label" scope="row"><span class="cat">${cat}</span><span class="name">${name}</span></th>` + MODELS.map((m, i) => {
+      const [n, q] = val(m.id, k), top = nums[i] === best;
+      let cls = m.subject ? "subject" : "";
+      if (top) cls += m.subject ? " win-ours" : m.sibling ? (ours ? "" : " win-sibling") : (ours || sib ? "" : " win-rival");
+      return `<td class="${cls}"><span class="v ${top ? "b" : ""}">${fmt(n, u)}</span>${q ? `<span class="q">${q}</span>` : ""}</td>`;
+    }).join("") + `</tr>`;
+  }
+  T.innerHTML = h + "</tbody>";
+})();
+
+// framed bar chart: competitors hatched in ink, Selena solid
+function chart(el, title, sub, k, u) {
+  const items = MODELS.map(m => ({ m, v: val(m.id, k)[0] }));
+  const W = 860, H = 320, top = 28, bottom = 48, left = 36, right = 8, ph = H - top - bottom, pw = W - left - right;
+  const bw = pw / items.length * 0.62, gap = pw / items.length;
+  const y = v => top + ph - v / 100 * ph;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${title}"><defs><pattern id="hatch-${k}" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#faf9f5"/><path d="M-1 1 l2 -2 M0 6 l6 -6 M5 7 l2 -2" stroke="#141413" stroke-width="1"/></pattern></defs>`;
+  for (const t of [0, 25, 50, 75, 100]) s += `<line x1="${left}" x2="${W - right}" y1="${y(t)}" y2="${y(t)}" stroke="#d1cfc5" stroke-width="1"/><text class="tick" x="${left - 8}" y="${y(t) + 4}" text-anchor="end">${t}</text>`;
+  items.forEach(({ m, v }, i) => {
+    const x = left + gap * i + (gap - bw) / 2, fill = m.subject ? "#b3263e" : m.sibling ? "#ebc8cd" : `url(#hatch-${k})`;
+    s += `<rect x="${x}" y="${y(v)}" width="${bw}" height="${top + ph - y(v)}" fill="${fill}" stroke="#141413" stroke-width="${m.subject || m.sibling ? 0 : 1}"/>`;
+    s += `<text class="val ${m.subject ? "bold" : ""}" x="${x + bw / 2}" y="${y(v) - 8}" text-anchor="middle">${fmt(v, u)}</text>`;
+    s += `<text class="lab ${m.subject ? "bold" : ""}" x="${x + bw / 2}" y="${H - bottom + 20}" text-anchor="middle">${m.name}</text>`;
+  });
+  s += `<line x1="${left}" x2="${W - right}" y1="${top + ph}" y2="${top + ph}" stroke="#141413" stroke-width="1"/></svg>`;
+  el.innerHTML = `<div class="panel"><div class="chart-head"><figcaption><span class="chart-title">${title}</span><span class="chart-sub">${sub}</span></figcaption>
+    <ul class="legend"><li><svg viewBox="0 0 14 14"><rect width="14" height="14" fill="#b3263e"/></svg><strong>Selena</strong></li><li><svg viewBox="0 0 14 14"><rect x=".5" y=".5" width="13" height="13" fill="url(#hatch-${k})" stroke="#141413"/></svg>Other models</li></ul></div>
+    <div class="plot">${s}</div></div>`;
+}
+chart(document.getElementById("chartExplain"), "SEL-Explain", "Win rate in blind comparisons", "explain", "%");
+
+// side contents: show after the hero, mark the current section
+const side = document.getElementById("side"), links = [...side.querySelectorAll("a")];
+const hero = document.querySelector(".hero");
+new IntersectionObserver(([e]) => side.classList.toggle("on", !e.isIntersecting), { threshold: 0.05 }).observe(hero);
+const secs = links.map(a => document.querySelector(a.getAttribute("href")));
+addEventListener("scroll", () => {
+  let cur = 0; secs.forEach((s, i) => { if (s.getBoundingClientRect().top < innerHeight * 0.35) cur = i; });
+  links.forEach((a, i) => a.classList.toggle("active", i === cur));
+}, { passive: true });
+</script>
+</body>
+</html>
