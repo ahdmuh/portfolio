@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f0f0e">
 <title>Selena</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,7 +31,8 @@
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; overscroll-behavior: none; background: var(--night); }
 html, body { margin: 0; color: var(--ink); overscroll-behavior: none; }
-body { background: var(--ivory); }
+body { background: var(--night); }
+article { background: var(--ivory); }
 body { font: 400 17px/1.53 var(--serif); font-feature-settings: "pnum" on, "lnum" on; -webkit-font-smoothing: antialiased; }
 a { color: inherit; text-underline-offset: .18em; }
 ::selection { background: color-mix(in srgb, var(--crimson) 25%, transparent); }
@@ -104,7 +106,9 @@ h2 { font: 500 32px/1.2 var(--serif); margin: 56px 0 24px; text-wrap: pretty; sc
 table.bench { font: 400 14px/1.4 var(--sans); font-feature-settings: "pnum" on, "lnum" on; border-collapse: separate; border-spacing: 0; table-layout: fixed; width: 100%; min-width: 1020px; color: var(--ink); }
 .bench th, .bench td { border-bottom: 1px solid var(--ink); border-left: 1px solid var(--ink); text-align: left; vertical-align: top; height: 72px; padding: 10px 12px; font-weight: 400; }
 .bench thead th { border-top: 1px solid var(--ink); height: 46px; white-space: nowrap; vertical-align: baseline; font-weight: 600; background: var(--ivory); }
-.bench tr > :last-child { border-right: 1px solid var(--ink); }
+.bench tr > :nth-last-child(2) { border-right: 1px solid var(--ink); }
+.bench .gap { display: none; }
+.bench .label-row { display: none; }
 .bench .corner, .bench .label { width: var(--label); position: sticky; left: 0; background: var(--ivory); z-index: 3; }
 .bench .cat { display: block; font-weight: 600; }
 .bench thead .arch { display: block; margin-top: 2px; font: 400 12px/1.3 var(--sans); letter-spacing: .02em; color: var(--muted); }
@@ -151,6 +155,27 @@ figure.chart { margin: 48px 0 0; width: 100%; max-width: 920px; }
 .notes h2 { font: 500 17px/1.3 var(--serif); color: var(--ink); margin: 0 0 16px; }
 .notes ol { margin: 0; padding-left: 1.2em; display: grid; gap: 10px; }
 
+@media (max-width: 640px) {
+  .grid { overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; scrollbar-width: none; }
+  .grid::-webkit-scrollbar { display: none; }
+  table.bench { min-width: 0; width: max-content; table-layout: auto; }
+  .bench .corner, .bench .label { display: none; }
+  .bench th, .bench td { height: auto; padding: 10px 12px 12px; min-width: 112px; width: 112px; box-sizing: border-box; scroll-snap-align: start; }
+  .bench thead th { white-space: normal; }
+  .bench .subject { position: sticky; left: 0; z-index: 2; background: var(--ivory); }
+  .bench .subject.win-ours { background: var(--rose); }
+  .bench thead .subject { z-index: 4; }
+  .bench .subject + * { border-left: none; }
+  .bench tr > :nth-child(2) { border-left: 1px solid var(--ink); }
+  .bench .label-row { display: table-row; }
+  .bench .label-row th { padding: 0; height: auto; border: none; min-width: 0; width: auto; scroll-snap-align: none; }
+  .bench .label-row-inner { position: sticky; left: 0; width: min(var(--vis, 100vw), calc(var(--tw, 100vw) - var(--sx, 0px))); box-sizing: border-box; padding: 14px 12px 8px; border-left: 1px solid var(--ink); border-right: 1px solid var(--ink); background: var(--ivory); }
+  .bench .label-row-inner .cat { display: inline; margin-right: 8px; }
+  .bench .label-row-inner .name { display: inline; margin: 0; font-size: 13px; }
+  .bench tbody .label-row + tr td { border-top: none; }
+  .bench .gap { display: table-cell; width: 16px; min-width: 16px; padding: 0; border: none !important; background: none; scroll-snap-align: none; }
+  .bench .q { font-size: 10.5px; }
+}
 @media (max-width: 720px) {
   .contents { margin-top: 48px; }
   .hero .stage { padding: 56px 0 24px; }
@@ -306,19 +331,32 @@ const fmt = (n, u) => (Math.abs(n - Math.round(n)) < 1e-9 ? String(Math.round(n)
 
 (function table() {
   const T = document.getElementById("bench");
-  let h = `<thead><tr><th class="corner"></th>` + MODELS.map(m => `<th class="${m.subject ? "subject" : ""}">${m.name}<span class="arch">${m.arch}</span></th>`).join("") + `</tr></thead><tbody>`;
+  const GAP = `<td class="gap" aria-hidden="true"></td>`;
+  let h = `<thead><tr><th class="corner"></th>` + MODELS.map(m => `<th class="${m.subject ? "subject" : ""}">${m.name}<span class="arch">${m.arch}</span></th>`).join("") + GAP + `</tr></thead><tbody>`;
   for (const [cat, name, u, k] of ROWS) {
     const nums = MODELS.map(m => +fmt(val(m.id, k)[0], ""));
     const best = Math.max(...nums);
     const ours = nums[0] === best, sib = nums[1] === best;
+    h += `<tr class="label-row" aria-hidden="true"><th colspan="${MODELS.length + 2}"><div class="label-row-inner"><span class="cat">${cat}</span><span class="name">${name}</span></div></th></tr>`;
     h += `<tr><th class="label" scope="row"><span class="cat">${cat}</span><span class="name">${name}</span></th>` + MODELS.map((m, i) => {
       const [n, q] = val(m.id, k), top = nums[i] === best;
       let cls = m.subject ? "subject" : "";
       if (top) cls += m.subject ? " win-ours" : m.sibling ? (ours ? "" : " win-sibling") : (ours || sib ? "" : " win-rival");
       return `<td class="${cls}"><span class="v ${top ? "b" : ""}">${fmt(n, u)}</span>${q ? `<span class="q">${q}</span>` : ""}</td>`;
-    }).join("") + `</tr>`;
+    }).join("") + GAP + `</tr>`;
   }
   T.innerHTML = h + "</tbody>";
+  // phones: the label row spans what is visible of the table, so it reads the same at any scroll position
+  const G = T.parentElement;
+  const fit = () => {
+    T.style.setProperty("--vis", G.clientWidth + "px");
+    const gap = T.querySelector("tbody tr:not(.label-row) .gap");
+    T.style.setProperty("--tw", (gap ? gap.offsetLeft : T.offsetWidth) + "px");   // right edge of the last real column
+    const pin = T.querySelector("thead .subject"); if (pin) G.style.scrollPaddingLeft = pin.offsetWidth + "px";
+  };
+  let raf = 0;
+  G.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; T.style.setProperty("--sx", G.scrollLeft + "px"); }); }, { passive: true });
+  fit(); addEventListener("resize", fit);
 })();
 
 // framed bar chart: competitors hatched in ink, Selena solid
