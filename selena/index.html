@@ -160,26 +160,31 @@ figure.chart { margin: 48px 0 0; width: 100%; max-width: 920px; }
   .grid::-webkit-scrollbar { display: none; }
   table.bench { min-width: 0; width: max-content; table-layout: auto; }
   .bench .corner, .bench .label { display: none; }
-  .bench th, .bench td { height: auto; padding: 10px 12px 12px; min-width: 112px; width: 112px; box-sizing: border-box; scroll-snap-align: start; }
-  .bench thead th { white-space: normal; }
+  /* open layout: full-width rules under every row, dividers only between numbers, no outer frame */
+  .bench th, .bench td { height: auto; padding: 10px 12px 12px; min-width: 112px; width: 112px; box-sizing: border-box; scroll-snap-align: start;
+    border: none !important; border-bottom: 1px solid var(--grid) !important; box-shadow: none !important; }
+  .bench td + td, .bench thead th + th { border-left: 1px solid var(--grid) !important; }
+  .bench thead th { white-space: normal; border-bottom: 1px solid var(--ink) !important; background: var(--ivory); }
+  .bench .subject::after { display: none; }
+  .bench thead .subject { color: var(--crimson); }
   .bench .subject { position: sticky; left: 0; z-index: 2; background: var(--ivory); }
   .bench .subject.win-ours { background: var(--rose); }
   .bench thead .subject { z-index: 4; }
-  .bench .subject + * { border-left: none; }
-  .bench tr > :nth-child(2) { border-left: 1px solid var(--ink); }
+  .bench tr > .subject { box-shadow: 1px 0 0 var(--grid) !important; }
   .bench .label-row { display: table-row; }
-  .bench .label-row th { padding: 0; height: auto; border: none; min-width: 0; width: auto; scroll-snap-align: none; }
-  .bench .label-row-inner { position: sticky; left: 0; width: min(var(--vis, 100vw), calc(var(--tw, 100vw) - var(--sx, 0px))); box-sizing: border-box; padding: 14px 12px 8px; border-left: 1px solid var(--ink); border-right: 1px solid var(--ink); background: var(--ivory); }
+  .bench .label-row th { padding: 0; height: auto; border: none !important; min-width: 0; width: auto; scroll-snap-align: none; }
+  .bench .label-row-inner { position: sticky; left: 0; width: var(--vis, 100vw); box-sizing: border-box; padding: 16px 0 6px; }
   .bench .label-row-inner .cat { display: inline; margin-right: 8px; }
   .bench .label-row-inner .name { display: inline; margin: 0; font-size: 13px; }
-  .bench tbody .label-row + tr td { border-top: none; }
   .bench .gap { display: table-cell; width: 16px; min-width: 16px; padding: 0; border: none !important; background: none; scroll-snap-align: none; }
+  .bench tr:not(.label-row) .gap { border-bottom: 1px solid var(--grid) !important; }
+  .bench thead .gap { border-bottom: 1px solid var(--ink) !important; }
   .bench .q { font-size: 10.5px; }
 }
 @media (max-width: 720px) {
   .contents { margin-top: 48px; }
   .hero .stage { padding: 56px 0 24px; }
-  article { padding-top: 64px; }
+  article { padding-top: 64px; padding-bottom: 96px; }
   .summary { font-size: 22px; line-height: 30px; }
   h2 { font-size: 25px; }
   .grid { --label: 148px; }
@@ -262,7 +267,7 @@ figure.chart { margin: 48px 0 0; width: 100%; max-width: 920px; }
 
   <div class="col">
     <h2 id="availability">Availability</h2>
-    <p>Selena runs in her own harness, built for voice calls, messages and threads. The model and its code are private for now.</p>
+    <p>Selena runs in her own harness, built for voice calls, messages and threads. The model and its code are private for now, and an open-weight release may follow.</p>
   </div>
 
   <section class="notes" aria-labelledby="fn">
