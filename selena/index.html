@@ -41,10 +41,10 @@ a { color: inherit; text-underline-offset: .18em; }
 .hero { background: var(--night); color: var(--night-ink); min-height: 100svh; display: grid; padding: 0 16px; position: relative; overflow: hidden; isolation: isolate; }
 .hero-grid { width: min(100%, 1280px); margin: 0 auto; min-height: 100svh; display: flex; align-items: center; justify-content: center; gap: clamp(40px, 6vw, 96px); position: relative; }
 .hero .stage { padding: 96px 0; position: relative; z-index: 1; width: clamp(280px, 34vw, 440px); flex: none; grid-template-columns: minmax(0, 1fr); }
-.selena { position: relative; order: -1; flex: none; height: min(76svh, 800px); aspect-ratio: 614 / 1451; }
+.selena { position: relative; order: -1; flex: none; height: min(76svh, 800px); aspect-ratio: 625 / 1460; }
 .figure { position: absolute; inset: 0; transform-origin: 50% 100%; }
 /* shadow generated from her own silhouette: contact shadows along each sole + her silhouette projected onto the floor */
-.shadow { position: absolute; z-index: -1; left: -52.117%; top: 0; width: 204.23%; height: auto; pointer-events: none; }
+.shadow { position: absolute; z-index: -1; left: -51.2%; top: 0; width: 202.4%; height: auto; pointer-events: none; }
 /* background ambience: slow drifting glows in her palette, compositor-only transforms */
 .ambience { position: absolute; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
 .ambience i { position: absolute; border-radius: 50%; will-change: transform; }
@@ -218,9 +218,9 @@ figure.chart { margin: 48px 0 0; width: 100%; max-width: 920px; }
   </div>
   <div class="selena" id="selena" role="img" aria-label="Selena: long white hair, red eyes, a black academy robe lined in crimson, arms crossed">
     <div class="figure">
-      <img id="selenaImg" src="sprite/selena-base.webp" alt="" width="614" height="1451" fetchpriority="high">
+      <img id="selenaImg" src="sprite/selena-base.webp" alt="" width="625" height="1460" fetchpriority="high">
     </div>
-    <img class="shadow" src="sprite/selena-shadow.webp" alt="" width="1254" height="1481" aria-hidden="true">
+    <img class="shadow" src="sprite/selena-shadow.webp" alt="" width="1265" height="1490" aria-hidden="true">
   </div>
   </div>
 </section>
